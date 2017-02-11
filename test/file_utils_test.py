@@ -18,6 +18,8 @@ class FileUtilsTest(unittest.TestCase):
     def test_copy_file(self):
         self.assertFalse(FileUtils.copy_file("/Users/paulottley/Desktop/MomsDadsPhotos/IMG_0001.jpg",
                                              "/Users/paulottley/Desktop/SortTarget/images/", "IMG_0001.jpg"))
+        self.assertFalse(FileUtils.copy_file("/Users/paulottley/Desktop/MomsDadsPhotos/IMG_0001.jpg",
+                                             "/Users/paulottley/Desktop/SortTarget/frog/", "IMG_0001.jpg"))
 
     # def test_move_file(self):
     #    self.assertFalse(FileUtils.move_file("/Users/paulottley/Desktop/MomsDadsPhotos/IMG_0001.jpg",

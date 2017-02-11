@@ -36,7 +36,7 @@ class FileSorter:
 
         file_lists = FileSorter.mark_duplicates(all_files)
 
-        FileSorter.copy_files(file_lists[0])
+        # FileSorter.copy_files(file_lists[0])
 
         FileSorter.final_report(file_lists)
 
@@ -65,7 +65,11 @@ class FileSorter:
                     all_files.append(current_file)
             ts2 = time.time()
             end_time = datetime.datetime.fromtimestamp(ts2).strftime('%Y-%m-%d %H:%M:%S')
-            print("Walk Dir completed at {0} with {1} files collected".format(end_time, len(all_files)))
+            print("Walk Dir completed at {0} with {1} files collected. {2} GB".format(end_time,
+                                                                                      FileSorter.get_type_count(
+                                                                                          all_files),
+                                                                                      FileSorter.calc_total_files_size(
+                                                                                          all_files)))
 
         return all_files
 
@@ -88,7 +92,7 @@ class FileSorter:
         return FileSorter.tag_file(fs_file, file_type, tgt_folder)
 
     @staticmethod
-    def mark_duplicates(all_files):
+    def mark_duplicates(all_files1, all_files2=None):
         """
 
         :rtype: tuple[all_files, duplicates]
@@ -98,23 +102,25 @@ class FileSorter:
         print("Mark Duplicates: " + start_time)
 
         duplicates = []
+        full_file_set = []
 
         # Make a copy for the test
-        all_files_src = all_files.copy()
+        if all_files2 is None:
+            all_files2 = all_files1.copy()
 
-        for x in all_files_src:
-            for y in all_files:
+        for x in all_files2:
+            for y in all_files1:
                 if x != y and x.get_size() == y.get_size():
                     if FileUtils.is_file_dup(x.get_full_path(), y.get_full_path()):
                         duplicates.append(y)
-                        all_files.remove(y)
-                        all_files_src.remove(y)
+                        all_files1.remove(y)
+                        all_files2.remove(y)
 
         ts2 = time.time()
         end_time = datetime.datetime.fromtimestamp(ts2).strftime('%Y-%m-%d %H:%M:%S')
-        print("Mark Duplicates completed at {0} with {1} files collected".format(end_time, len(all_files)))
+        print("Mark Duplicates completed at {0} with {1} files collected".format(end_time, len(all_files1)))
 
-        return all_files, duplicates
+        return all_files1, duplicates
 
     @staticmethod
     def final_report(file_lists):
@@ -144,17 +150,12 @@ class FileSorter:
         print("Size of all duplicates: {0} GB".format(FileSorter.calc_total_files_size(duplicates)))
 
     @staticmethod
-    def rename_files():
-        return False
-
-    @staticmethod
     def move_files(all_files):
         print("Total files to move {0}".format(len(all_files)))
 
         for x in all_files:
             FileUtils.move_file(x.get_full_path(),
-                                "{0}{1}".format(x.get_tgt_dir(), x.get_tgt_folder()),
-                                x.get_tgt_filename())
+                                "{0}{1}".format(x.get_tgt_dir(), x.get_tgt_folder()), x.get_tgt_filename())
 
     @staticmethod
     def copy_files(all_files):

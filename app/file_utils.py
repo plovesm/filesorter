@@ -37,8 +37,8 @@ class FileUtils:
                 return FileUtils.move_file(src_f, tgt_dir, FileUtils.rename_file(tgt_filename, "_"))
 
             move(src_f, tgt_dir + tgt_filename)
-        except:
-            print("Err: " + sys.exc_info()[0])
+        except FileNotFoundError:
+            print("Err: Could not copy to that location")
 
         return False
 
@@ -51,8 +51,11 @@ class FileUtils:
                 return FileUtils.copy_file(src_f, tgt_dir, FileUtils.rename_file(tgt_filename, "_"))
 
             copyfile(src_f, tgt_dir + tgt_filename)
-        except:
-            print("Err: " + sys.exc_info()[0])
+        except FileNotFoundError:
+            print("Err: Could not copy to that location. Creating folder...")
+            if not os.path.exists(tgt_dir):
+                os.mkdir(tgt_dir)
+                return FileUtils.copy_file(src_f, tgt_dir, tgt_filename)
 
         return False
 
