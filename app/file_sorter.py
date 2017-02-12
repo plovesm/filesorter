@@ -92,7 +92,7 @@ class FileSorter:
         return FileSorter.tag_file(fs_file, file_type, tgt_folder)
 
     @staticmethod
-    def mark_duplicates(all_files1, all_files2=None):
+    def mark_duplicates(all_files):
         """
 
         :rtype: tuple[all_files, duplicates]
@@ -102,25 +102,38 @@ class FileSorter:
         print("Mark Duplicates: " + start_time)
 
         duplicates = []
-        full_file_set = []
+        dedupped_file_set = []
 
-        # Make a copy for the test
-        if all_files2 is None:
-            all_files2 = all_files1.copy()
+        # Make a copy to test
+        all_files_test = all_files.copy()
 
-        for x in all_files2:
-            for y in all_files1:
+        for x in all_files:
+            for y in all_files_test:
                 if x != y and x.get_size() == y.get_size():
                     if FileUtils.is_file_dup(x.get_full_path(), y.get_full_path()):
                         duplicates.append(y)
-                        all_files1.remove(y)
-                        all_files2.remove(y)
+                        all_files.remove(y)
+                        all_files_test.remove(y)
+
+        dedupped_file_set += all_files
 
         ts2 = time.time()
         end_time = datetime.datetime.fromtimestamp(ts2).strftime('%Y-%m-%d %H:%M:%S')
-        print("Mark Duplicates completed at {0} with {1} files collected".format(end_time, len(all_files1)))
+        print("Mark Duplicates completed at {0} with {1} files collected".format(end_time, len(dedupped_file_set)))
 
-        return all_files1, duplicates
+        return dedupped_file_set, duplicates
+
+    @staticmethod
+    def merge_files(file_set1, file_set2):
+        # De-dup each set independently
+        file_set_pair1 = FileSorter.mark_duplicates(file_set1)
+        file_set_pair2 = FileSorter.mark_duplicates(file_set2)
+
+        # Combine the two sets
+        full_file_set = file_set_pair1[0] + file_set_pair2[0]
+
+        # Dedup the full set
+        return FileSorter.mark_duplicates(full_file_set)
 
     @staticmethod
     def final_report(file_lists):

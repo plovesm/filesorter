@@ -26,10 +26,10 @@ class FileSorterTest(unittest.TestCase):
         self.assertEquals(6, len(file_lists[1]))
         print("All Files")
         for x in file_lists[0]:
-            print(x.get_filename())
+            print("Name {0} and Size {1}".format(x.get_filename(), x.get_size()))
         print("Duplicates")
         for y in file_lists[1]:
-            print(y.get_filename())
+            print("Name {0} and Size {1}".format(y.get_filename(), y.get_size()))
         # self.assertFalse(self.fs.copy_files(file_lists[0]))
         self.fs.final_report(file_lists)
 
@@ -39,10 +39,14 @@ class FileSorterTest(unittest.TestCase):
         self.assertEquals(17, len(all_files))
         self.assertEquals(11, len(all_files2))
 
-        file_lists = self.fs.mark_duplicates(all_files, all_files2)
-
-        self.assertEquals(18, len(file_lists[0]))
-        self.assertEquals(8, len(file_lists[1]))
+        file_lists = self.fs.merge_files(all_files, all_files2)
+        for x in file_lists[0]:
+            print("Name {0} and Size {1}".format(x.get_filename(), x.get_size()))
+        print("Duplicates")
+        for y in file_lists[1]:
+            print("Name {0} and Size {1}".format(y.get_filename(), y.get_size()))
+        self.assertEquals(19, len(file_lists[0]))
+        self.assertEquals(2, len(file_lists[1]))
 
     # def test_sort_file(self):
     #     self.assertEquals("i", self.fs.sort_file("/Users/paulottley/img001.jpeg"))
