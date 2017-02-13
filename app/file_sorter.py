@@ -40,7 +40,6 @@ class FileSorter:
 
         FileSorter.final_report(file_lists)
 
-
     @staticmethod
     def walk_dir(dir_to_walk, tgt_dir):
         ts = time.time()
@@ -125,6 +124,10 @@ class FileSorter:
 
     @staticmethod
     def merge_files(file_set1, file_set2):
+        """
+
+        :rtype: tuple[all_files, duplicates]
+        """
         # De-dup each set independently
         file_set_pair1 = FileSorter.mark_duplicates(file_set1)
         file_set_pair2 = FileSorter.mark_duplicates(file_set2)
@@ -132,8 +135,11 @@ class FileSorter:
         # Combine the two sets
         full_file_set = file_set_pair1[0] + file_set_pair2[0]
 
-        # Dedup the full set
-        return FileSorter.mark_duplicates(full_file_set)
+        # De-dup the full set
+        full_file_set_pair = FileSorter.mark_duplicates(full_file_set)
+        full_file_duplicates = full_file_set_pair[1] + file_set_pair1[1] + file_set_pair2[1]
+
+        return full_file_set_pair[0], full_file_duplicates
 
     @staticmethod
     def final_report(file_lists):
@@ -210,8 +216,22 @@ class FileSorter:
     def tag_file(fs_file, fs_file_type, tgt_folder):
         fs_file.set_type(fs_file_type)
         fs_file.set_tgt_folder(tgt_folder + SEPARATOR)
-        return fs_file
+        return FileSorter.prepend_folder_name(fs_file)
 
     @staticmethod
     def get_formatted_percentage(numerator, denominator):
         return FileSorter.format_four_places((numerator / denominator) * 100)
+
+    @staticmethod
+    def prepend_folder_name(file):
+        src_dir = file.get_src_dir()
+        src_path = []
+        if None is not src_dir and src_dir.endswith(SEPARATOR):
+            src_path = src_dir.rsplit(SEPARATOR, maxsplit=2)
+
+        try:
+            file.set_tgt_filename("{0}_{1}".format(src_path[1], file.get_filename()))
+        except IndexError:
+            print("No source directory found")
+
+        return file
