@@ -1,0 +1,32 @@
+Initializing FileSorter...
+Walk Dir started at 2017-02-16 00:47:01:
+Walk Dir completed at 2017-02-16 00:47:14 with 101983 files collected. 1195.3031 GB
+Mark Duplicates: 2017-02-16 00:47:14
+Mark Duplicates completed at 2017-02-16 07:00:27 with 74289 files collected
+Total files to move 74289
+Err: Could not copy to that location
+Err: Could not copy to that location
+Err: Could not copy to that location
+Total files: 74289 Total Size: 869.0785 GB
+Total duplicate files: 27694
+Image count: 66409 (89.3928%) size: 171.1342 GB
+Video count: 6383 (8.5921%) size: 697.1837 GB
+Other count: 1497 (2.0151%) size: 0.7606 GB
+File Name: .DS_Store, Size: 10244, Type: o
+Size of all duplicates: 326.2247 GB
+
+Process finished with exit code 0
+
+Initializing FileSorter...
+Walk Dir started at 2017-02-21 16:08:12:
+Walk Dir completed at 2017-02-21 16:09:02 with 106207 files collected. 1118.1112 GB
+Mark Duplicates: 2017-02-21 16:09:02
+Mark Duplicates completed at 2017-02-21 20:22:09 with 104733 files collected
+Total files: 104733 Total Size: 1002.5540 GB
+Total duplicate files: 1474
+Image count: 97307 (92.9096%) size: 250.7808 GB
+Video count: 7135 (6.8126%) size: 751.6415 GB
+Other count: 291 (0.2778%) size: 0.1317 GB
+File Name: 001.JPG, Size: 1295393, Type: i
+Size of all duplicates: 115.5572 GB
+
