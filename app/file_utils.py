@@ -38,7 +38,10 @@ class FileUtils:
 
             move(src_f, tgt_dir + tgt_filename)
         except FileNotFoundError:
-            print("Err: Could not copy to that location")
+            print("Err: Could not move to that location. Creating folder...")
+            if not os.path.exists(tgt_dir):
+                os.mkdir(tgt_dir)
+                return FileUtils.move_file(src_f, tgt_dir, tgt_filename)
 
         return False
 

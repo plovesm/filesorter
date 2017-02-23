@@ -36,6 +36,7 @@ class FileSorter:
 
         file_lists = FileSorter.mark_duplicates(all_files)
 
+        FileSorter.move_files(file_lists[0])
         # FileSorter.copy_files(file_lists[0])
 
         FileSorter.final_report(file_lists)
@@ -181,8 +182,8 @@ class FileSorter:
         print("Total files to copy {0}".format(len(all_files)))
 
         for x in all_files:
-            FileUtils.copy_file(
-                x.get_full_path(), "{0}{1}".format(x.get_tgt_dir(), x.get_tgt_folder()), x.get_tgt_filename())
+            FileUtils.copy_file(x.get_full_path(),
+                                "{0}{1}".format(x.get_tgt_dir(), x.get_tgt_folder()), x.get_tgt_filename())
 
     @staticmethod
     def format_four_places(num):

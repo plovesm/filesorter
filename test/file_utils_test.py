@@ -1,6 +1,7 @@
 import unittest
 from app import FileUtils
 
+
 class FileUtilsTest(unittest.TestCase):
 
     def test_get_file_type(self):
@@ -21,9 +22,11 @@ class FileUtilsTest(unittest.TestCase):
         self.assertFalse(FileUtils.copy_file("/Users/paulottley/Desktop/MomsDadsPhotos/IMG_0001.jpg",
                                              "/Users/paulottley/Desktop/SortTarget/frog/", "IMG_0001.jpg"))
 
-    # def test_move_file(self):
-    #    self.assertFalse(FileUtils.move_file("/Users/paulottley/Desktop/MomsDadsPhotos/IMG_0001.jpg",
-    #                                         "/Users/paulottley/Desktop/SortTarget/images/", "IMG_0001.jpg"))
+    def test_move_file(self):
+        self.assertFalse(FileUtils.move_file("/Users/paulottley/Desktop/MomsDadsPhotos/IMG_0001.jpg",
+                                             "/Users/paulottley/Desktop/SortTarget/images/", "IMG_0001.jpg"))
+        self.assertFalse(FileUtils.copy_file("/Users/paulottley/Desktop/MomsDadsPhotos/IMG_0001.jpg",
+                                             "/Users/paulottley/Desktop/SortTarget/frog/", "IMG_0001.jpg"))
 
     def test_does_file_exist(self):
         self.assertFalse(FileUtils.does_file_exist("fakefile", " "))
