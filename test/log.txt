@@ -17,6 +17,7 @@ Size of all duplicates: 326.2247 GB
 
 Process finished with exit code 0
 
+2010 iMac
 Initializing FileSorter...
 Walk Dir started at 2017-02-21 16:08:12:
 Walk Dir completed at 2017-02-21 16:09:02 with 106207 files collected. 1118.1112 GB
@@ -29,4 +30,19 @@ Video count: 7135 (6.8126%) size: 751.6415 GB
 Other count: 291 (0.2778%) size: 0.1317 GB
 File Name: 001.JPG, Size: 1295393, Type: i
 Size of all duplicates: 115.5572 GB
+
+2016 MacBook Pro
+Initializing FileSorter...
+Walk Dir started at 2017-02-23 17:23:01:
+Walk Dir completed at 2017-02-23 17:23:48 with 106207 files collected. 1118.1112 GB
+Mark Duplicates: 2017-02-23 17:23:48
+Mark Duplicates completed at 2017-02-23 19:47:58 with 104733 files collected
+Total files: 104733 Total Size: 1002.5540 GB
+Total duplicate files: 1474
+Image count: 97307 (92.9096%) size: 250.7808 GB
+Video count: 7135 (6.8126%) size: 751.6415 GB
+Other count: 291 (0.2778%) size: 0.1317 GB
+File Name: 001.JPG, Size: 1295393, Type: i
+Size of all duplicates: 115.5572 GB
+
 
