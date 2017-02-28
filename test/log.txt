@@ -46,3 +46,24 @@ File Name: 001.JPG, Size: 1295393, Type: i
 Size of all duplicates: 115.5572 GB
 
 
+iMac Merge Files
+Initializing FileSorter...
+Walk Dir started at 2017-02-27 09:19:15:
+Walk Dir completed at 2017-02-27 09:20:04 with 106207 files collected. 1118.1112 GB
+Walk Dir started at 2017-02-27 09:20:04:
+Walk Dir completed at 2017-02-27 09:20:15 with 75784 files collected. 888.6735 GB
+Mark Duplicates: 2017-02-27 09:20:15
+Mark Duplicates completed at 2017-02-27 13:01:27 with 104733 files collected
+Mark Duplicates: 2017-02-27 13:01:28
+Mark Duplicates completed at 2017-02-27 14:13:04 with 74996 files collected
+Mark Duplicates: 2017-02-27 14:13:04
+Mark Duplicates completed at 2017-02-28 07:58:26 with 107386 files collected
+Total files: 107386 Total Size: 1015.8026 GB
+Total duplicate files: 74605
+Image count: 98624 (91.8406%) size: 254.6323 GB
+Video count: 7261 (6.7616%) size: 760.2578 GB
+Other count: 1501 (1.3978%) size: 0.9125 GB
+File Name: 001.JPG, Size: 1295393, Type: i
+Size of all duplicates: 990.9821 GB
+
+

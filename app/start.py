@@ -16,11 +16,11 @@ fs = FileSorter(STR_DIR1, TGT_DIR1)
 # fs.start_up()
 
 all_files1 = fs.walk_dir(STR_DIR1, TGT_DIR1)
-# all_files2 = fs.walk_dir(STR_DIR25, TGT_DIR1)
+all_files2 = fs.walk_dir(STR_DIR25, TGT_DIR1)
 
-# file_lists = fs.merge_files(all_files1, all_files2)
+file_lists = fs.merge_files(all_files1, all_files2)
 
-file_lists = fs.mark_duplicates(all_files1)
+# file_lists = fs.mark_duplicates(all_files1)
 
 fs.final_report(file_lists)
 
