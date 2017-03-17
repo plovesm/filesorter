@@ -33,50 +33,55 @@ class ImageUtils:
             try:
                 exif = Image.open(f)._getexif().items()
                 dt = ImageUtils.get_exif_field(exif, 'DateTimeOriginal')
-
+                if dt == "00:00:00" or dt is None:
+                    print("No date found. Trying different method.")
+                    dt = ImageUtils.get_alt_metadata(f)
                 # dt = Image.open(f)._getexif()[36867]
-            except FileNotFoundError:
-                print("Error capturing date taken")
-                dt = "-01:00:00"
-            except OSError:
-                print("Error identifying file as an image")
-                dt = "-02:00:00"
-            except AttributeError:
-                print("File does not contain exif data")
-                dt = "-03:00:00"
-            except KeyError:
-                print("Exif Key was not valid for this file")
-                dt = "-04:00:00"
+            except Exception as err:
+                print("get_dt_captured(): Metadata extraction error: %s" % err)
+                dt = ImageUtils.get_alt_metadata(f)
+
         print("Date: " + str(dt))
         return dt
 
     @staticmethod
-    def get_vid_metadata(f):
-        parser = createParser(f)
-        if not parser:
-            print("Unable to parse file", file=stderr)
-            exit(1)
+    def get_alt_metadata(f):
+        dt = "00:00:00"
+        try:
+            parser = createParser(f)
+            if not parser:
+                print("Unable to parse file", file=stderr)
+                exit(1)
 
-        with parser:
-            try:
-                metadata = extractMetadata(parser)
-            except Exception as err:
-                print("Metadata extraction error: %s" % err)
-                metadata = None
-        if not metadata:
-            print("Unable to extract metadata")
-            exit(1)
+            with parser:
+                try:
+                    metadata = extractMetadata(parser)
+                except Exception as err:
+                    print("Metadata extraction error: %s" % err)
+                    metadata = None
+            if not metadata:
+                print("Unable to extract metadata")
+                exit(1)
 
-        for line in metadata.exportPlaintext():
-            print(line)
-
+            for line in metadata.exportPlaintext():
+                if "Creation date" in line:
+                    dt = line.split("- Creation date: ")[1]
+                print(line)
+        except Exception as err2:
+            print("Error creating Parser: %s" % err2)
+        return dt
 
     @staticmethod
     def get_dt_captured_split(f):
         dt = ImageUtils.get_dt_captured(f)
-        dt_split = None
+        dt_split = []
         if dt is not None:
-            dt_split = dt.split(":")
+            if "-" in dt:
+                dt_split = dt.split("-")
+            else:
+                dt_split = dt.split(":")
+        if dt_split is None or len(dt_split) < 2:
+            dt_split = ["No Date", "00"]
         return dt_split
 
     @staticmethod
