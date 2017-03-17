@@ -34,7 +34,7 @@ class FileUtils:
         # Move files to image, video, other
         try:
             if FileUtils.does_file_exist(tgt_filename, tgt_dir):
-                return FileUtils.move_file(src_f, tgt_dir, FileUtils.rename_file(tgt_filename, "_"))
+                return FileUtils.move_file(src_f, tgt_dir, FileUtils.rename_file(tgt_filename, "((d))"))
 
             move(src_f, tgt_dir + tgt_filename)
         except FileNotFoundError:
@@ -47,17 +47,19 @@ class FileUtils:
 
     @staticmethod
     def copy_file(src_f, tgt_dir, tgt_filename):
+        print("Copying File: " + tgt_dir + tgt_filename)
         # Copy files to target destination
         try:
             if FileUtils.does_file_exist(tgt_filename, tgt_dir):
-                print("File Exists {0}: ".format(tgt_filename))
-                return FileUtils.copy_file(src_f, tgt_dir, FileUtils.rename_file(tgt_filename, "_"))
+                # TODO figure out a way to identify same name before copy (Identify in mark duplicates)
+                return FileUtils.copy_file(src_f, tgt_dir, FileUtils.rename_file(tgt_filename, "((d))"))
 
             copyfile(src_f, tgt_dir + tgt_filename)
         except FileNotFoundError:
             print("Err: Could not copy to that location. Creating folder...")
+
             if not os.path.exists(tgt_dir):
-                os.mkdir(tgt_dir)
+                os.makedirs(tgt_dir)
                 return FileUtils.copy_file(src_f, tgt_dir, tgt_filename)
 
         return False

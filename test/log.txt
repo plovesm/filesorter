@@ -66,4 +66,34 @@ Other count: 1501 (1.3978%) size: 0.9125 GB
 File Name: 001.JPG, Size: 1295393, Type: i
 Size of all duplicates: 990.9821 GB
 
+2015 MacBook Merge Files
+Initializing FileSorter...
+Walk Dir started at 2017-02-28 08:14:45:
+Walk Dir completed at 2017-02-28 08:15:35 with 106207 files collected. 1118.1112 GB
+Walk Dir started at 2017-02-28 08:15:35:
+Walk Dir completed at 2017-02-28 08:15:40 with 75784 files collected. 888.6735 GB
+Mark Duplicates: 2017-02-28 08:15:40
+Mark Duplicates completed at 2017-02-28 11:03:44 with 104733 files collected
+Mark Duplicates: 2017-02-28 11:03:44
+Mark Duplicates completed at 2017-02-28 11:55:55 with 74996 files collected
+Mark Duplicates: 2017-02-28 11:55:55
+Mark Duplicates completed at 2017-02-28 19:32:37 with 107386 files collected
+Total files: 107386 Total Size: 1015.8026 GB
+Total duplicate files: 74605
+Image count: 98624 (91.8406%) size: 254.6323 GB
+Video count: 7261 (6.7616%) size: 760.2578 GB
+Other count: 1501 (1.3978%) size: 0.9125 GB
+File Name: 001.JPG, Size: 1295393, Type: i
+Size of all duplicates: 990.9821 GB
 
+Process finished with exit code 0
+
+Total files= 7261 Total Size= 760.2578 GB
+Total duplicate files= 7303
+Image count= 0 (0.0000%) size= 0.0000 GB
+Video count= 7261 (100.0000%) size= 760.2578 GB
+Other count= 0 (0.0000%) size= 0.0000 GB
+File Name= 022.MOV, Size= 66908494, Type= v
+Size of all duplicates= 816.5364 GB
+
+Process finished with exit code

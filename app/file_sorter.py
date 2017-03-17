@@ -6,7 +6,10 @@ import os
 import datetime
 import time
 from decimal import Decimal
+
+from app import EmailUtils
 from app import FileUtils
+from app import ImageUtils
 from objects import FSfile
 
 SEPARATOR = "/"
@@ -28,7 +31,7 @@ class FileSorter:
         self.start_dir = start_dir
         self.target_dir = target_dir
 
-    def start_up(self):
+    def default_start(self):
         start_dir = self.start_dir
         tgt_dir = self.target_dir
 
@@ -59,9 +62,10 @@ class FileSorter:
                     fs_file.set_src_dir(root + SEPARATOR)
                     fs_file.set_tgt_dir(tgt_dir + SEPARATOR)
                     fs_file.set_size(FileUtils.get_file_size(fs_file.get_full_path()))
+                    fs_file.set_date_taken(ImageUtils.get_dt_captured(fs_file.get_full_path()))
                     current_file = FileSorter.sort_file_type(fs_file)
 
-                    # if current_file.get_type() == "v":
+                    # if current_file.get_type() == "o":
                     all_files.append(current_file)
             ts2 = time.time()
             end_time = datetime.datetime.fromtimestamp(ts2).strftime('%Y-%m-%d %H:%M:%S')
@@ -88,6 +92,11 @@ class FileSorter:
         elif f_ext in VID_TYPES:
             file_type = VID_TAG
             tgt_folder = VID_DIR
+
+        if fs_file.get_date_taken() is not "" and fs_file.get_date_taken() is not None:
+            print("Date Taken: " + str(fs_file.get_date_taken()))
+            dt_split = ImageUtils.get_dt_captured_split(fs_file.get_full_path())
+            tgt_folder = "{0}{1}{2}{3}{4}".format(tgt_folder, SEPARATOR, dt_split[0], SEPARATOR, dt_split[1])
 
         return FileSorter.tag_file(fs_file, file_type, tgt_folder)
 
@@ -158,16 +167,18 @@ class FileSorter:
         other_perc = FileSorter.get_formatted_percentage(other_count, total_count)
         other_size = FileSorter.calc_total_files_size(all_files, OTH_TAG)
 
-        print("Total files: {0} Total Size: {1} GB".format(total_count, total_size))
-        print("Total duplicate files: {0}".format(FileSorter.get_type_count(duplicates)))
-        print("Image count: {0} ({1}%) size: {2} GB".format(image_count, image_perc, image_size))
-        print("Video count: {0} ({1}%) size: {2} GB".format(vid_count, vid_perc, vid_size))
-        print("Other count: {0} ({1}%) size: {2} GB".format(other_count, other_perc, other_size))
-        print("File Name: {0}, Size: {1}, Type: {2}".format(all_files[0].get_filename(),
+        msg = "Total files= {0} Total Size= {1} GB".format(total_count, total_size)
+        msg += "\nTotal duplicate files= {0}".format(FileSorter.get_type_count(duplicates))
+        msg += "\nImage count= {0} ({1}%) size= {2} GB".format(image_count, image_perc, image_size)
+        msg += "\nVideo count= {0} ({1}%) size= {2} GB".format(vid_count, vid_perc, vid_size)
+        msg += "\nOther count= {0} ({1}%) size= {2} GB".format(other_count, other_perc, other_size)
+        msg += "\nFile Name= {0}, Size= {1}, Type= {2}".format(all_files[0].get_filename(),
                                                             all_files[0].get_size(),
-                                                            all_files[0].get_type()))
+                                                            all_files[0].get_type())
 
-        print("Size of all duplicates: {0} GB".format(FileSorter.calc_total_files_size(duplicates)))
+        msg += "\nSize of all duplicates= {0} GB".format(FileSorter.calc_total_files_size(duplicates))
+        EmailUtils.send_email(msg)
+        print(msg)
 
     @staticmethod
     def move_files(all_files):
@@ -194,18 +205,24 @@ class FileSorter:
     @staticmethod
     def calc_total_files_size(files_arr, f_type=None):
         total_size = 0
-        for x in files_arr:
-            if f_type is None or x.get_type() is f_type:
-                total_size += x.get_size()
+        try:
+            for x in files_arr:
+                if f_type is None or x.get_type() is f_type:
+                    total_size += x.get_size()
 
-        return FileSorter.format_four_places(total_size / 1000000000)
+            return FileSorter.format_four_places(total_size / 1000000000)
+        except TypeError:
+            return -1
 
     @staticmethod
     def get_type_count(all_files, f_type=None):
         count = 0
 
         if f_type is None:
-            return len(all_files)
+            try:
+                return len(all_files)
+            except TypeError:
+                return -1
         else:
             for x in all_files:
                 if x.get_type() == f_type:
