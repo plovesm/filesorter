@@ -15,7 +15,7 @@ class ImageUtils:
     @staticmethod
     def get_exif_field(exif, field):
         for (k, v) in exif:
-            print('%s = %s' % (TAGS.get(k), v))
+            # print('%s = %s' % (TAGS.get(k), v))
             if TAGS.get(k) == field:
                 return v
 
@@ -29,7 +29,6 @@ class ImageUtils:
         #    print('%s = %s' % (TAGS.get(k), v))
 
         if os.path.isfile(f):
-            print(f)
             try:
                 exif = Image.open(f)._getexif().items()
                 dt = ImageUtils.get_exif_field(exif, 'DateTimeOriginal')
@@ -41,7 +40,6 @@ class ImageUtils:
                 print("get_dt_captured(): Metadata extraction error: %s" % err)
                 dt = ImageUtils.get_alt_metadata(f)
 
-        print("Date: " + str(dt))
         return dt
 
     @staticmethod
@@ -50,8 +48,8 @@ class ImageUtils:
         try:
             parser = createParser(f)
             if not parser:
-                print("Unable to parse file", file=stderr)
-                exit(1)
+                print("Unable to parse file")
+                dt = "0P:00:00"
 
             with parser:
                 try:
@@ -61,7 +59,7 @@ class ImageUtils:
                     metadata = None
             if not metadata:
                 print("Unable to extract metadata")
-                exit(1)
+                dt = "0M:00:00"
 
             for line in metadata.exportPlaintext():
                 if "Creation date" in line:
