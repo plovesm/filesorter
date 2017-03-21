@@ -12,7 +12,7 @@ from app import FileUtils
 from app import ImageUtils
 from objects import FSfile
 
-SEPARATOR = "/"
+SEPARATOR = os.sep
 IMG_DIR = "images"
 VID_DIR = "videos"
 OTH_DIR = "other"
