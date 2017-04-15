@@ -16,8 +16,8 @@ class ImageUtilsTest(unittest.TestCase):
                             "/Users/paulottley/Google Drive/MomsDadsPhotos/IMG_0263.MOV"))
 
     def test_get_vid_metadata(self):
-        self.assertEqual("2017-03-17 15:07:28", ImageUtils.get_alt_metadata(
-            "/Users/paulottley/Google Drive/MomsDadsPhotos/trim.6F5621AB-0A79-46D8-97AC-DEA9D7D1F0AE.MOV"))
+        self.assertEqual("2017:03:17", ImageUtils.get_alt_metadata(
+            "/Users/paulottley/Desktop/SortTarget/videos/0M/00/videos_20161107-021757_IMG_0942.mp4"))
 
 
     def test_get_dt_captured_split(self):

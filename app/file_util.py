@@ -3,7 +3,6 @@
 # @copyright 2017
 import hashlib
 import os
-import sys
 from shutil import copyfile
 from shutil import move
 
@@ -80,7 +79,8 @@ class FileUtils:
         # Check if file exists
         if FileUtils.does_file_exist(file1, "") and FileUtils.does_file_exist(file2, ""):
             # Check file size first
-            return os.path.getsize(file1) == os.path.getsize(file2) and FileUtils.hash_file(file1) == FileUtils.hash_file(file2)
+            return os.path.getsize(file1) == os.path.getsize(file2) and \
+                   FileUtils.hash_file(file1) == FileUtils.hash_file(file2)
 
         # If we get to this point, a file either doesn't exist or it didn't match
         return False

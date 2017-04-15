@@ -94,7 +94,7 @@ class FileSorter:
             tgt_folder = VID_DIR
 
         if fs_file.get_date_taken() is not "" and fs_file.get_date_taken() is not None:
-            print("Date Taken: " + str(fs_file.get_date_taken()))
+            # print("Date Taken: " + str(fs_file.get_date_taken()))
             dt_split = ImageUtils.get_dt_captured_split(fs_file.get_full_path())
             tgt_folder = "{0}{1}{2}{3}{4}".format(tgt_folder, SEPARATOR, dt_split[0], SEPARATOR, dt_split[1])
 
@@ -234,7 +234,9 @@ class FileSorter:
     def tag_file(fs_file, fs_file_type, tgt_folder):
         fs_file.set_type(fs_file_type)
         fs_file.set_tgt_folder(tgt_folder + SEPARATOR)
-        return FileSorter.prepend_folder_name(fs_file)
+        # return FileSorter.prepend_folder_name(fs_file)
+        fs_file.set_tgt_filename(fs_file.get_filename())
+        return fs_file
 
     @staticmethod
     def get_formatted_percentage(numerator, denominator):

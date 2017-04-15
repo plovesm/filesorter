@@ -1,6 +1,6 @@
 # @author Paul Ottley
 # @copyright 2017
-# File used to start the FilesSorter program
+# File used to start the FilesSorter launch
 
 from app import FileSorter
 
