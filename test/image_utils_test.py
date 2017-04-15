@@ -19,20 +19,21 @@ class ImageUtilsTest(unittest.TestCase):
         self.assertEqual("2017:03:17", ImageUtils.get_alt_metadata(
             "/Users/paulottley/Desktop/SortTarget/videos/0M/00/videos_20161107-021757_IMG_0942.mp4"))
 
-
     def test_get_dt_captured_split(self):
-        dt_arr = ImageUtils.get_dt_captured_split(
-            "/Users/paulottley/Google Drive/MomsDadsPhotos/IMG_0002.jpg")
+        dt = ImageUtils.get_dt_captured_split("2014:05:23 10:23:32")
 
-        self.assertEqual("2014", dt_arr[0])
-        self.assertEqual("11", dt_arr[1])
+        self.assertEqual(2014, dt.year)
+        self.assertEqual(5, dt.month)
 
-    def test_get_dt_captured_split(self):
-        dt_arr = ImageUtils.get_dt_captured_split(
-            "/Users/paulottley/Google Drive/MomsDadsPhotos/IMG_0002.jpg")
+        dt2 = ImageUtils.get_dt_captured_split("2014:05:23")
 
-        self.assertEqual("2014", dt_arr[0])
-        self.assertEqual("11", dt_arr[1])
+        self.assertEqual(2014, dt2.year)
+        self.assertEqual(5, dt2.month)
+
+        dt3 = ImageUtils.get_dt_captured_split("2012-06-06 18:47:57")
+
+        self.assertEqual(2012, dt3.year)
+        self.assertEqual(6, dt3.month)
 
     def test_get_dt_captured_split_vid(self):
         dt_arr = ImageUtils.get_dt_captured_split(

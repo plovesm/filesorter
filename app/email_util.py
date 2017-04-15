@@ -2,8 +2,8 @@
 import smtplib
 
 
-SENDER = ("", "")
-RECEIVER = ""
+SENDER = ("devlongfacepbo@gmail.com", "devHomeIdaho")
+RECEIVER = "ott1982@gmail.com"
 
 
 class EmailUtils:

@@ -4,7 +4,7 @@
 import os
 from shutil import move
 
-from app import FileSorter
+from app import NavUtil
 
 STR_DIR1 = r"/Users/paulottley/Movies/iMovie Library.imovielibrary/4-2-17/Original Media"
 STR_DIR2 = r"/Volumes/OttFamilyShare/Backups/Library/To be imported"

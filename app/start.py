@@ -2,7 +2,7 @@
 # @copyright 2017
 # File used to start the FilesSorter launch
 
-from app import FileSorter
+from app import NavUtil
 
 STR_DIR1 = r"/Volumes/Elements2TB/OttleyFamilyShare/FamilyShare.photoslibrary/Masters"
 STR_DIR15 = r"smb://Paul’s iMac._smb._tcp.local/Elements2TB/OttleyFamilyShare/FamilyShare.photoslibrary/Masters"
@@ -17,7 +17,7 @@ TGT_DIR1 = r"/Volumes/Elements2TB/SortTarget"
 TGT_DIR2 = r"/Volumes/MyBook2TB/Backups/SortTarget2"
 TGT_DIR3 = r"/Volumes/MyBook2TB/Backups/SortTarget3"
 
-fs = FileSorter(STR_DIR1, TGT_DIR1)
+fs = NavUtil(STR_DIR1, TGT_DIR1)
 # fs.start_up()
 
 all_files1 = fs.walk_dir(STR_DIR25, TGT_DIR1)

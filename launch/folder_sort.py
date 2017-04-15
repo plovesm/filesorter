@@ -2,7 +2,7 @@
 # @copyright 2017
 # File used to start the FilesSorter launch
 
-from app import FileSorter
+from app import NavUtil
 
 
 STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library/videos"
@@ -10,7 +10,7 @@ STR_DIR2 = r"/Volumes/OttFamilyShare-3/Backups/Library/To be imported"
 
 TGT_DIR1 = r"/Volumes/MyBook2TB/Backups/Library/videos"
 
-fs = FileSorter(STR_DIR2, STR_DIR2)
+fs = NavUtil(STR_DIR2, STR_DIR2)
 
 all_files1 = fs.walk_dir(STR_DIR2, STR_DIR2)
 

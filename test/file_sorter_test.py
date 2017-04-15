@@ -1,5 +1,5 @@
 import unittest
-from app import FileSorter
+from app import NavUtil
 from objects import FSfile
 
 START_DIR = r"/Users/paulottley/Desktop/Test_pics"
@@ -9,7 +9,7 @@ TGT_DIR = r"/Users/paulottley/Desktop/SortTarget"
 class FileSorterTest(unittest.TestCase):
 
     def setUp(self):
-        self.fs = FileSorter(START_DIR, TGT_DIR)
+        self.fs = NavUtil(START_DIR, TGT_DIR)
 
     def test_walk_dir(self):
         all_files = self.fs.walk_dir(START_DIR, TGT_DIR)

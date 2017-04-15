@@ -1,7 +1,7 @@
 # @author Paul Ottley
 # @copyright 2017
 from app import ImageUtils
-from app import FileSorter
+from app import NavUtil
 
 STR_DIR1 = r"/Users/paulottley/Movies/iMovie Library.imovielibrary/4-2-17/Original Media"
 STR_DIR2 = r"/Volumes/OttFamilyShare/Backups/Pictures"
@@ -11,7 +11,7 @@ STR_DIR5 = r"/Users/paulottley/Google Drive/MomsDadsPhotos"
 
 TGT_DIR1 = r"/Users/paulottley/Desktop/SortTarget"
 
-fs = FileSorter(STR_DIR4, TGT_DIR1)
+fs = NavUtil(STR_DIR4, TGT_DIR1)
 
 all_files1 = fs.walk_dir(STR_DIR4, TGT_DIR1)
 print("Before")

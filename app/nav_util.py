@@ -10,81 +10,85 @@ from decimal import Decimal
 from app import EmailUtils
 from app import FileUtils
 from app import ImageUtils
+from app import Rules
 from objects import FSfile
 
+"""
+Constants
+"""
 SEPARATOR = os.sep
-IMG_DIR = "images"
-VID_DIR = "videos"
-OTH_DIR = "other"
-IMG_TAG = "i"
-VID_TAG = "v"
-OTH_TAG = "o"
+IMG_DIR = Rules.get_img_dir()
+VID_DIR = Rules.get_vid_dir()
+OTH_DIR = Rules.get_oth_dir()
+IMG_TAG = Rules.get_img_tag()
+VID_TAG = Rules.get_vid_tag()
+OTH_TAG = Rules.get_oth_tag()
 
-IMG_TYPES = ["jpg", "png", "gif", "bmp", "jpeg", "nef", "tif"]
-VID_TYPES = ["mpg", "mp4", "mpeg", "flv", "wmv", "mov", "avi", "3gp", "dv", "m4v"]
+IMG_TYPES = Rules.get_img_types()
+VID_TYPES = Rules.get_vid_types()
 
 
-class FileSorter:
+class NavUtil:
 
     def __init__(self, start_dir, target_dir):
         print("Initializing FileSorter...")
         self.start_dir = start_dir
         self.target_dir = target_dir
 
-    def default_start(self):
-        start_dir = self.start_dir
-        tgt_dir = self.target_dir
-
-        all_files = FileSorter.walk_dir(start_dir, tgt_dir)
-
-        file_lists = FileSorter.mark_duplicates(all_files)
-
-        FileSorter.move_files(file_lists[0])
-        # FileSorter.copy_files(file_lists[0])
-
-        FileSorter.final_report(file_lists)
-
+    """
+    @description: Walk a directory and build out a file collection and metadata
+    """
     @staticmethod
     def walk_dir(dir_to_walk, tgt_dir):
+        # Print time started
         ts = time.time()
         start_time = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
         print("Walk Dir started at {0}:".format(start_time))
 
+        # Build empty container for the files
         all_files = []
 
         if os.path.isdir(dir_to_walk):
             # Walk the directory and count the files
             for root, dirs, files in os.walk(dir_to_walk):
                 for file in files:
-                    # Check the type of file
+                    # Step 1: Build the file object with name and location
                     fs_file = FSfile()
                     fs_file.set_filename(file)
                     fs_file.set_src_dir(root + SEPARATOR)
                     fs_file.set_tgt_dir(tgt_dir + SEPARATOR)
+
+                    # Step 2: Add metadata of size and date to object
                     fs_file.set_size(FileUtils.get_file_size(fs_file.get_full_path()))
                     fs_file.set_date_taken(ImageUtils.get_dt_captured(fs_file.get_full_path()))
-                    current_file = FileSorter.sort_file_type(fs_file)
 
+                    # Step 3: Determine file type and tag
+                    current_file = NavUtil.sort_file_type(fs_file)
+
+                    # Step 4: Add file to collection
                     all_files.append(current_file)
-            ts2 = time.time()
-            end_time = datetime.datetime.fromtimestamp(ts2).strftime('%Y-%m-%d %H:%M:%S')
-            print("Walk Dir completed at {0} with {1} files collected. {2} GB".format(end_time,
-                                                                                      FileSorter.get_type_count(
-                                                                                          all_files),
-                                                                                      FileSorter.calc_total_files_size(
-                                                                                          all_files)))
+
+        # Print time ended
+        ts2 = time.time()
+        end_time = datetime.datetime.fromtimestamp(ts2).strftime('%Y-%m-%d %H:%M:%S')
+        print("Walk Dir completed at {0} with {1} files collected. {2} GB".format(end_time,
+                                                                                  NavUtil.get_type_count(
+                                                                                    all_files),
+                                                                                  NavUtil.calc_total_files_size(
+                                                                                    all_files)))
 
         return all_files
 
     @staticmethod
     def sort_file_type(fs_file):
+        # Initialize type as other
         file_type = OTH_TAG
         tgt_folder = OTH_DIR
 
         # Get the extension
         f_ext = FileUtils.get_file_type(fs_file.get_filename())
 
-        # Count by type and fill array
+        # Check extension and switch to image or video
         if f_ext in IMG_TYPES:
             file_type = IMG_TAG
             tgt_folder = IMG_DIR
@@ -92,12 +96,7 @@ class FileSorter:
             file_type = VID_TAG
             tgt_folder = VID_DIR
 
-        if fs_file.get_date_taken() is not "" and fs_file.get_date_taken() is not None:
-            # print("Date Taken: " + str(fs_file.get_date_taken()))
-            dt_split = ImageUtils.get_dt_captured_split(fs_file.get_full_path())
-            tgt_folder = "{0}{1}{2}{3}{4}".format(tgt_folder, SEPARATOR, dt_split[0], SEPARATOR, dt_split[1])
-
-        return FileSorter.tag_file(fs_file, file_type, tgt_folder)
+        return NavUtil.tag_file(fs_file, file_type, tgt_folder)
 
     @staticmethod
     def mark_duplicates(all_files):
@@ -105,6 +104,7 @@ class FileSorter:
 
         :rtype: tuple[all_files, duplicates]
         """
+        # Print start time
         ts = time.time()
         start_time = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
         print("Mark Duplicates: " + start_time)
@@ -125,6 +125,7 @@ class FileSorter:
 
         dedupped_file_set += all_files
 
+        # Print end time
         ts2 = time.time()
         end_time = datetime.datetime.fromtimestamp(ts2).strftime('%Y-%m-%d %H:%M:%S')
         print("Mark Duplicates completed at {0} with {1} files collected".format(end_time, len(dedupped_file_set)))
@@ -138,46 +139,17 @@ class FileSorter:
         :rtype: tuple[all_files, duplicates]
         """
         # De-dup each set independently
-        file_set_pair1 = FileSorter.mark_duplicates(file_set1)
-        file_set_pair2 = FileSorter.mark_duplicates(file_set2)
+        file_set_pair1 = NavUtil.mark_duplicates(file_set1)
+        file_set_pair2 = NavUtil.mark_duplicates(file_set2)
 
         # Combine the two sets
         full_file_set = file_set_pair1[0] + file_set_pair2[0]
 
         # De-dup the full set
-        full_file_set_pair = FileSorter.mark_duplicates(full_file_set)
+        full_file_set_pair = NavUtil.mark_duplicates(full_file_set)
         full_file_duplicates = full_file_set_pair[1] + file_set_pair1[1] + file_set_pair2[1]
 
         return full_file_set_pair[0], full_file_duplicates
-
-    @staticmethod
-    def final_report(file_lists):
-        all_files = file_lists[0]
-        duplicates = file_lists[1]
-        total_count = FileSorter.get_type_count(all_files)
-        total_size = FileSorter.calc_total_files_size(all_files)
-        image_count = FileSorter.get_type_count(all_files, IMG_TAG)
-        image_perc = FileSorter.get_formatted_percentage(image_count, total_count)
-        image_size = FileSorter.calc_total_files_size(all_files, IMG_TAG)
-        vid_count = FileSorter.get_type_count(all_files, VID_TAG)
-        vid_perc = FileSorter.get_formatted_percentage(vid_count, total_count)
-        vid_size = FileSorter.calc_total_files_size(all_files, VID_TAG)
-        other_count = FileSorter.get_type_count(all_files, OTH_TAG)
-        other_perc = FileSorter.get_formatted_percentage(other_count, total_count)
-        other_size = FileSorter.calc_total_files_size(all_files, OTH_TAG)
-
-        msg = "Total files= {0} Total Size= {1} GB".format(total_count, total_size)
-        msg += "\nTotal duplicate files= {0}".format(FileSorter.get_type_count(duplicates))
-        msg += "\nImage count= {0} ({1}%) size= {2} GB".format(image_count, image_perc, image_size)
-        msg += "\nVideo count= {0} ({1}%) size= {2} GB".format(vid_count, vid_perc, vid_size)
-        msg += "\nOther count= {0} ({1}%) size= {2} GB".format(other_count, other_perc, other_size)
-        msg += "\nFile Name= {0}, Size= {1}, Type= {2}".format(all_files[0].get_filename(),
-                                                            all_files[0].get_size(),
-                                                            all_files[0].get_type())
-
-        msg += "\nSize of all duplicates= {0} GB".format(FileSorter.calc_total_files_size(duplicates))
-        EmailUtils.send_email(msg)
-        print(msg)
 
     @staticmethod
     def move_files(all_files):
@@ -209,7 +181,7 @@ class FileSorter:
                 if f_type is None or x.get_type() is f_type:
                     total_size += x.get_size()
 
-            return FileSorter.format_four_places(total_size / 1000000000)
+            return NavUtil.format_four_places(total_size / 1000000000)
         except TypeError:
             return -1
 
@@ -239,7 +211,7 @@ class FileSorter:
 
     @staticmethod
     def get_formatted_percentage(numerator, denominator):
-        return FileSorter.format_four_places((numerator / denominator) * 100)
+        return NavUtil.format_four_places((numerator / denominator) * 100)
 
     @staticmethod
     def prepend_folder_name(file):

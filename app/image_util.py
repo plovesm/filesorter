@@ -101,19 +101,23 @@ class ImageUtils:
         return metadata
 
     @staticmethod
-    def get_dt_captured_split(f):
-        dt = ImageUtils.get_dt_captured(f)
-        dt_split = []
+    def get_dt_captured_split(str_dt="0000:00:00 00:00:00"):
+        print("Date recieved: {0} len: {1}".format(str_dt, len(str_dt.split())))
+
+        dt = str_dt.split()[0]
+
+        # Go through date and extract year, month
         if dt is not None:
             if "-" in dt:
-                dt_split = dt.split("-")
-            elif ":" in dt:
-                dt_split = dt.split(":")
+                dt = dt.replace("-", ":")
             else:
-                print("Check date: {0}".format(dt))
-        if dt_split is None or len(dt_split) < 2:
-            dt_split = ["No Date", "00"]
-        return dt_split
+                print("Check date: {0}".format(str_dt))
+
+        # Convert to date
+        d = datetime.datetime.strptime(dt, "%Y:%m:%d")
+
+        # Return the date as a date object
+        return d
 
     @staticmethod
     def get_dimensions(f):
