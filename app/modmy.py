@@ -16,7 +16,6 @@ import datetime
 from optparse import OptionParser
 import os.path
 import struct
-import sys
 import time
 
 CONTAINER_ATOMS = ["moov", "trak", "mdia"]

@@ -2,7 +2,9 @@
 # @author Paul Ottley
 # @copyright 2017
 import os
+import datetime
 
+from app import Mov
 from PIL import Image
 from PIL.ExifTags import TAGS
 from hachoir.parser import createParser
@@ -32,11 +34,11 @@ class ImageUtils:
                 exif = Image.open(f)._getexif().items()
                 dt = ImageUtils.get_exif_field(exif, 'DateTimeOriginal')
                 if dt == "0A:00:00" or dt is None:
-                    # print("No date found. Trying different method.")
+                    print("No date found. Trying different method.")
                     dt = ImageUtils.get_alt_metadata2(f)
-                # dt = Image.open(f)._getexif()[36867]
+                    # dt = Image.open(f)._getexif()[36867]
             except Exception as err:
-                # print("get_dt_captured(): Metadata extraction error: %s" % err)
+                print("get_dt_captured(): Metadata extraction error: %s" % err)
                 dt = ImageUtils.get_alt_metadata(f)
 
         return dt
@@ -47,7 +49,7 @@ class ImageUtils:
         try:
             parser = createParser(f)
             if not parser:
-                # print("Unable to parse file")
+                print("Unable to parse file")
                 dt = "0P:00:00"
 
             with parser:
@@ -64,7 +66,7 @@ class ImageUtils:
                     print("Metadata extraction error: %s" % err)
                     metadata = None
             if not metadata:
-                # print("Unable to extract metadata")
+                print("Unable to extract metadata")
                 dt = "0M:00:00"
             """
             for line in metadata.exportPlaintext():
@@ -82,18 +84,14 @@ class ImageUtils:
         filename, realname = filename, filename
         parser = createParser(filename, realname)
         if not parser:
-            print
-            "Unable to parse file"
-            exit(1)
+            print("Unable to parse file")
         try:
             metadata = extractMetadata(parser)
         except Exception as err:
             print("Metadata extraction error: %s" % err)
             metadata = None
         if not metadata:
-            print
-            "Unable to extract metadata"
-            exit(1)
+            print("Unable to extract metadata")
 
         text = metadata.exportPlaintext()
 
@@ -109,8 +107,10 @@ class ImageUtils:
         if dt is not None:
             if "-" in dt:
                 dt_split = dt.split("-")
-            else:
+            elif ":" in dt:
                 dt_split = dt.split(":")
+            else:
+                print("Check date: {0}".format(dt))
         if dt_split is None or len(dt_split) < 2:
             dt_split = ["No Date", "00"]
         return dt_split
@@ -118,3 +118,18 @@ class ImageUtils:
     @staticmethod
     def get_dimensions(f):
         return "{0}{1}{2}".format(Image.open(f)._getexif()[40962], "x",Image.open(f)._getexif()[40963])
+
+    @staticmethod
+    def set_date(fn, year, month, day):
+        try:
+            dt = datetime.date(year, month, day)
+            strdt = dt.strftime("%Y-%m-%d %H:%M:%S")
+
+            m = Mov(fn)
+            m.parse()
+
+            if strdt is not "":
+                d = datetime.datetime.strptime(strdt, "%Y-%m-%d %H:%M:%S")
+                m.set_date(d)
+        except Exception as err:
+            print("Setting date failed: " + err)

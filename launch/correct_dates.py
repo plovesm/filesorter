@@ -1,12 +1,7 @@
 # @author Paul Ottley
 # @copyright 2017
-
-from app import Mov
+from app import ImageUtils
 from app import FileSorter
-import datetime
-import subprocess
-
-import os
 
 STR_DIR1 = r"/Users/paulottley/Movies/iMovie Library.imovielibrary/4-2-17/Original Media"
 STR_DIR2 = r"/Volumes/OttFamilyShare/Backups/Pictures"
@@ -41,18 +36,11 @@ for line in parsed1:
     if "Creation time:" in line:
         print(line)
 """
-dt = datetime.date(2013, 5, 17)
-strdt = dt.strftime("%Y-%m-%d %H:%M:%S")
 
-m = Mov(all_files1[1].get_full_path())
-m.parse()
-
-if strdt is not "":
-    d = datetime.datetime.strptime(strdt, "%Y-%m-%d %H:%M:%S")
-    m.set_date(d)
+ImageUtils.set_date(all_files1[1].get_full_path(), 2013, 4, 10)
 
 
-subprocess.call(["python", "../app/modmy.py", all_files1[1].get_full_path(), strdt])
+# subprocess.call(["python", "../app/modmy.py", all_files1[1].get_full_path(), strdt])
 print("After")
 for file in all_files1:
     print("filename: {0}, date: {1}".format(file.get_filename(), file.get_date_taken()))

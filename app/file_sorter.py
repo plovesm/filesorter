@@ -65,7 +65,6 @@ class FileSorter:
                     fs_file.set_date_taken(ImageUtils.get_dt_captured(fs_file.get_full_path()))
                     current_file = FileSorter.sort_file_type(fs_file)
 
-                    # if current_file.get_type() == "o":
                     all_files.append(current_file)
             ts2 = time.time()
             end_time = datetime.datetime.fromtimestamp(ts2).strftime('%Y-%m-%d %H:%M:%S')
