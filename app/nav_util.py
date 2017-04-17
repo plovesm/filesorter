@@ -5,9 +5,7 @@
 import os
 import datetime
 import time
-from decimal import Decimal
 
-from app import EmailUtils
 from app import FileUtils
 from app import ImageUtils
 from app import Rules
@@ -29,11 +27,6 @@ VID_TYPES = Rules.get_vid_types()
 
 
 class NavUtil:
-
-    def __init__(self, start_dir, target_dir):
-        print("Initializing FileSorter...")
-        self.start_dir = start_dir
-        self.target_dir = target_dir
 
     """
     @description: Walk a directory and build out a file collection and metadata
@@ -167,39 +160,6 @@ class NavUtil:
             FileUtils.copy_file(x.get_full_path(),
                                 "{0}{1}".format(x.get_tgt_dir(), x.get_tgt_folder()), x.get_tgt_filename())
 
-    @staticmethod
-    def format_four_places(num):
-        four_places = Decimal(10) ** -4
-
-        return Decimal(num).quantize(four_places)
-
-    @staticmethod
-    def calc_total_files_size(files_arr, f_type=None):
-        total_size = 0
-        try:
-            for x in files_arr:
-                if f_type is None or x.get_type() is f_type:
-                    total_size += x.get_size()
-
-            return NavUtil.format_four_places(total_size / 1000000000)
-        except TypeError:
-            return -1
-
-    @staticmethod
-    def get_type_count(all_files, f_type=None):
-        count = 0
-
-        if f_type is None:
-            try:
-                return len(all_files)
-            except TypeError:
-                return -1
-        else:
-            for x in all_files:
-                if x.get_type() == f_type:
-                    count += 1
-
-        return count
 
     @staticmethod
     def tag_file(fs_file, fs_file_type, tgt_folder):
@@ -208,10 +168,6 @@ class NavUtil:
         # return FileSorter.prepend_folder_name(fs_file)
         fs_file.set_tgt_filename(fs_file.get_filename())
         return fs_file
-
-    @staticmethod
-    def get_formatted_percentage(numerator, denominator):
-        return NavUtil.format_four_places((numerator / denominator) * 100)
 
     @staticmethod
     def prepend_folder_name(file):

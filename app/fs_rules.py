@@ -2,6 +2,8 @@
 # @author Paul Ottley
 # @copyright 2017
 
+import os
+
 """
 Constants
 """
@@ -15,6 +17,7 @@ OTH_TAG = "o"
 
 IMG_TYPES = ["jpg", "png", "gif", "bmp", "jpeg", "nef", "tif"]
 VID_TYPES = ["mpg", "mp4", "mpeg", "flv", "wmv", "mov", "avi", "3gp", "dv", "m4v"]
+
 
 class Rules:
 

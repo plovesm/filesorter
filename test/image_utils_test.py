@@ -4,12 +4,21 @@ from app import ImageUtils
 
 class ImageUtilsTest(unittest.TestCase):
     def test_get_dt_captured(self):
-        self.assertEqual("2014:11:26 09:55:12", ImageUtils.get_dt_captured(
-                            "/Users/paulottley/Google Drive/MomsDadsPhotos/IMG_0002.jpg"))
+        self.assertEqual("2017:04:14 00:51:40", ImageUtils.get_dt_captured(
+                            "/Users/paulottley/Desktop/SortSource/IMG_4739.JPG"), "Happy Path")
+
+        self.assertEqual("0000:00:00 00:00:00", ImageUtils.get_dt_captured(
+            "/Users/paulottley/Desktop/SortSource/images_images_09-September_New_Malibu.JPG"), "Malibu check")
+
+        self.assertEqual("2013-05-17 18:04:48", ImageUtils.get_dt_captured(
+            "/Users/paulottley/Desktop/SortSource/Family_VID_20130517_130427.3gp"), "3gp check")
+
+        self.assertEqual("2012-09-25 19:40:24", ImageUtils.get_dt_captured(
+            "/Users/paulottley/Desktop/SortSource/videos_videos_Family_IMG_0063.MOV"), "MOV check")
 
     def test_get_dt_captured_bad_file(self):
         self.assertEqual("00:00:00", ImageUtils.get_dt_captured(
-                            "/Users/paulottley/Google Drive/MomsDadsPhotos/IMG_0114.JPG"))
+                            "/Users/paulottley/Desktop/SortSource/images_images_09-September_New_Malibu.JPG"))
 
     def test_get_dt_captured_video(self):
         self.assertEqual("2012-06-06 18:47:57", ImageUtils.get_dt_captured(
@@ -35,13 +44,17 @@ class ImageUtilsTest(unittest.TestCase):
         self.assertEqual(2012, dt3.year)
         self.assertEqual(6, dt3.month)
 
-    def test_get_dt_captured_split_vid(self):
-        dt_arr = ImageUtils.get_dt_captured_split(
-                    "/Users/paulottley/Google Drive/MomsDadsPhotos/IMG_0263.MOV")
+        shouldbeerror = ImageUtils.get_dt_captured_split("0B:00:00")
+        self.assertIsInstance(shouldbeerror, ValueError)
 
-        self.assertEqual("2012", dt_arr[0])
-        self.assertEqual("06", dt_arr[1])
+        shouldbeerror = ImageUtils.get_dt_captured_split(None)
+        self.assertIsInstance(shouldbeerror, Exception)
 
+        shouldbeerror = ImageUtils.get_dt_captured_split("")
+        self.assertIsInstance(shouldbeerror, IndexError)
+
+        shouldbeerror = ImageUtils.get_dt_captured_split("frog lips")
+        self.assertIsInstance(shouldbeerror, ValueError)
 
     def test_get_dimensions(self):
         self.assertEqual("3264x2448", ImageUtils.get_dimensions(

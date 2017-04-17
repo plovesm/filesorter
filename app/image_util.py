@@ -14,110 +14,99 @@ from hachoir.metadata import extractMetadata
 class ImageUtils:
 
     @staticmethod
-    def get_exif_field(exif, field):
-        for (k, v) in exif:
-            # print('%s = %s' % (TAGS.get(k), v))
-            if TAGS.get(k) == field:
-                return v
-
-        return "0A:00:00"
-
-    @staticmethod
-    def get_dt_captured(f):
-        dt = ""
-
-        # for (k, v) in Image.open(f)._getexif().items():
-        #    print('%s = %s' % (TAGS.get(k), v))
-
-        if os.path.isfile(f):
+    def get_dt_captured(filename):
+        # Check to see if it is even a file and then begin
+        if os.path.isfile(filename):
             try:
-                exif = Image.open(f)._getexif().items()
-                dt = ImageUtils.get_exif_field(exif, 'DateTimeOriginal')
-                if dt == "0A:00:00" or dt is None:
-                    print("No date found. Trying different method.")
-                    dt = ImageUtils.get_alt_metadata2(f)
-                    # dt = Image.open(f)._getexif()[36867]
+                # First method uses exif and works mainly for images
+                exif = Image.open(filename)._getexif().items()
+                dt = ImageUtils.get_exif_field(filename, exif, 'DateTimeOriginal')
+
+                if dt is not "NotFound" and dt is not None:
+                    return dt
+
             except Exception as err:
                 print("get_dt_captured(): Metadata extraction error: %s" % err)
-                dt = ImageUtils.get_alt_metadata(f)
 
-        return dt
+            # If the date wasn't found or didn't exist, try a different approach
+            dt = ImageUtils.get_alt_metadata(filename)
+            if dt is not None:
+                return dt
+            else:
+                # Everything failed, so date doesn't exist
+                return "0000:00:00 00:00:00"
 
     @staticmethod
-    def get_alt_metadata(f):
-        dt = "0B:00:00"
+    def get_exif_field(fn, exif, field):
+        # First attempt to get by fieldname
+        for (k, v) in exif:
+            # print('%s = %s' % (TAGS.get(k), v))
+            key_name = TAGS.get(k)
+            if key_name == field:
+                return v
+
         try:
-            parser = createParser(f)
-            if not parser:
-                print("Unable to parse file")
-                dt = "0P:00:00"
-
-            with parser:
-                try:
-                    metadata = extractMetadata(parser)
-                    #TODO Do something with metadata
-                    for line in metadata.exportPlaintext():
-                        if "Creation date" in line:
-                            dt = line.split("- Creation date: ")[1]
-                            dt2 = dt.split(" ")[0].replace("-", ":")
-                            print("File: " + f + " Date fixed: " + dt2)
-                            dt = dt2
-                except Exception as err:
-                    print("Metadata extraction error: %s" % err)
-                    metadata = None
-            if not metadata:
-                print("Unable to extract metadata")
-                dt = "0M:00:00"
-            """
-            for line in metadata.exportPlaintext():
-                if "Creation date" in line:
-                    dt = line.split("- Creation date: ")[1]
-                print(line)
-            """
-        except Exception as err2:
-            print("Error creating Parser: %s" % err2)
-        return dt
+            # Second attempt is to get by index
+            dt = Image.open(fn)._getexif()[36867]
+            if dt is not None and dt is not "":
+                return dt
+        except Exception as err:
+            # Finally, admit not found
+            return "NotFound"
 
     @staticmethod
-    def get_alt_metadata2(filename):
-
-        filename, realname = filename, filename
-        parser = createParser(filename, realname)
+    def get_alt_metadata(filename):
+        # First create a parser
+        parser = createParser(filename)
         if not parser:
             print("Unable to parse file")
+            return None
+
+        # If the parse worked, try extracting Metadata
         try:
             metadata = extractMetadata(parser)
         except Exception as err:
             print("Metadata extraction error: %s" % err)
-            metadata = None
+            return None
+
         if not metadata:
             print("Unable to extract metadata")
+            return None
 
-        text = metadata.exportPlaintext()
+        metatext = metadata.exportPlaintext()
 
-        for line in text:
-            print(line)
+        # Check metadata to find a date
+        print("Printing Metadata")
+        for line in metatext:
+            if "- Creation date: " in line:
+                return line.replace("- Creation date: ", "")
 
-        return metadata
 
     @staticmethod
     def get_dt_captured_split(str_dt="0000:00:00 00:00:00"):
-        print("Date recieved: {0} len: {1}".format(str_dt, len(str_dt.split())))
 
-        dt = str_dt.split()[0]
+        try:
+            # First split on any spaces
+            dt = str_dt.split()[0]
 
-        # Go through date and extract year, month
-        if dt is not None:
-            if "-" in dt:
-                dt = dt.replace("-", ":")
-            else:
-                print("Check date: {0}".format(str_dt))
+            # Go through date and extract year, month
+            if dt is not None:
+                if "-" in dt:
+                    dt = dt.replace("-", ":")
+                else:
+                    print("Check date: {0}".format(str_dt))
 
-        # Convert to date
-        d = datetime.datetime.strptime(dt, "%Y:%m:%d")
+            # Convert to date
+            d = datetime.datetime.strptime(dt, "%Y:%m:%d")
 
-        # Return the date as a date object
-        return d
+            # Return the date as a date object
+            return d
+        except ValueError as err:
+            print("Not a valid YYYY:MM:DD date pattern.")
+            return err
+        except Exception as err:
+            print("Unknown error has occurred: {0}".format(err))
+            return err
 
     @staticmethod
     def get_dimensions(f):
