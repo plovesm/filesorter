@@ -10,6 +10,8 @@ from PIL.ExifTags import TAGS
 from hachoir.parser import createParser
 from hachoir.metadata import extractMetadata
 
+from app import Rules
+
 
 class ImageUtils:
 
@@ -26,7 +28,8 @@ class ImageUtils:
                     return dt
 
             except Exception as err:
-                print("get_dt_captured(): Metadata extraction error: %s" % err)
+                if Rules.get_debug() is True:
+                    print("get_dt_captured(): Metadata extraction error: %s" % err)
 
             # If the date wasn't found or didn't exist, try a different approach
             dt = ImageUtils.get_alt_metadata(filename)
@@ -59,28 +62,34 @@ class ImageUtils:
         # First create a parser
         parser = createParser(filename)
         if not parser:
-            print("Unable to parse file")
+            if Rules.get_debug() is True:
+                print("Unable to parse file")
             return None
 
         # If the parse worked, try extracting Metadata
         try:
             metadata = extractMetadata(parser)
         except Exception as err:
-            print("Metadata extraction error: %s" % err)
+            if Rules.get_debug() is True:
+                print("Metadata extraction error: %s" % err)
             return None
 
         if not metadata:
-            print("Unable to extract metadata")
+            if Rules.get_debug() is True:
+                print("Unable to extract metadata")
             return None
 
         metatext = metadata.exportPlaintext()
 
         # Check metadata to find a date
-        print("Printing Metadata")
+        if Rules.get_debug() is True:
+            print("Printing Metadata")
         for line in metatext:
             if "- Creation date: " in line:
                 return line.replace("- Creation date: ", "")
 
+        # Parse metadata failed. Last hope so returning None
+        return None
 
     @staticmethod
     def get_dt_captured_split(str_dt="0000:00:00 00:00:00"):

@@ -64,11 +64,7 @@ class NavUtil:
         # Print time ended
         ts2 = time.time()
         end_time = datetime.datetime.fromtimestamp(ts2).strftime('%Y-%m-%d %H:%M:%S')
-        print("Walk Dir completed at {0} with {1} files collected. {2} GB".format(end_time,
-                                                                                  NavUtil.get_type_count(
-                                                                                    all_files),
-                                                                                  NavUtil.calc_total_files_size(
-                                                                                    all_files)))
+        print("Walk Dir completed at {0} with {1} files collected.".format(end_time, len(all_files)))
 
         return all_files
 

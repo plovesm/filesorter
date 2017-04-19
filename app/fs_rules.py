@@ -15,6 +15,8 @@ IMG_TAG = "i"
 VID_TAG = "v"
 OTH_TAG = "o"
 
+DEBUG = False
+
 IMG_TYPES = ["jpg", "png", "gif", "bmp", "jpeg", "nef", "tif"]
 VID_TYPES = ["mpg", "mp4", "mpeg", "flv", "wmv", "mov", "avi", "3gp", "dv", "m4v"]
 
@@ -52,3 +54,7 @@ class Rules:
     @staticmethod
     def get_vid_types():
         return VID_TYPES
+
+    @staticmethod
+    def get_debug():
+        return DEBUG

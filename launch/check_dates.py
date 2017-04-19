@@ -1,5 +1,6 @@
 # @author Paul Ottley
 # @copyright 2017
+# File used to start the FilesSorter launch
 
 from app import NavUtil
 
@@ -16,5 +17,4 @@ all_files1 = NavUtil.walk_dir(STR_DIR1, STR_DIR1)
 # Update date
 
 for file in all_files1:
-
     print("Filename: {0} date: {1}".format(file.get_filename(), file.get_date_taken()))

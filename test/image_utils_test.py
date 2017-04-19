@@ -16,18 +16,6 @@ class ImageUtilsTest(unittest.TestCase):
         self.assertEqual("2012-09-25 19:40:24", ImageUtils.get_dt_captured(
             "/Users/paulottley/Desktop/SortSource/videos_videos_Family_IMG_0063.MOV"), "MOV check")
 
-    def test_get_dt_captured_bad_file(self):
-        self.assertEqual("00:00:00", ImageUtils.get_dt_captured(
-                            "/Users/paulottley/Desktop/SortSource/images_images_09-September_New_Malibu.JPG"))
-
-    def test_get_dt_captured_video(self):
-        self.assertEqual("2012-06-06 18:47:57", ImageUtils.get_dt_captured(
-                            "/Users/paulottley/Google Drive/MomsDadsPhotos/IMG_0263.MOV"))
-
-    def test_get_vid_metadata(self):
-        self.assertEqual("2017:03:17", ImageUtils.get_alt_metadata(
-            "/Users/paulottley/Desktop/SortTarget/videos/0M/00/videos_20161107-021757_IMG_0942.mp4"))
-
     def test_get_dt_captured_split(self):
         dt = ImageUtils.get_dt_captured_split("2014:05:23 10:23:32")
 
@@ -59,6 +47,15 @@ class ImageUtilsTest(unittest.TestCase):
     def test_get_dimensions(self):
         self.assertEqual("3264x2448", ImageUtils.get_dimensions(
                             "/Users/paulottley/Google Drive/MomsDadsPhotos/IMG_0002.jpg"))
+
+    def test_set_date(self):
+        self.assertEqual("0000:00:00 00:00:00", ImageUtils.get_dt_captured(
+            "/Users/paulottley/Desktop/SortSource/Family_VID_20130517_130053.mp4"), "mp4 check")
+
+        ImageUtils.set_date("/Users/paulottley/Desktop/SortSource/Family_VID_20130517_130218.mp4", 2013, 5, 17)
+
+        self.assertEqual("2013:05:17 18:04:48", ImageUtils.get_dt_captured(
+            "/Users/paulottley/Desktop/SortSource/Family_VID_20130517_130218.mp4"), "mp4 check")
 
 
 if __name__ == '__main__':
