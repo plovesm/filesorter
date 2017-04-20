@@ -18,7 +18,12 @@ class ImageUtils:
 
     @staticmethod
     def get_dt_captured(filename):
-        # Check to see if it is even a file and then begin
+        # First, see if the date is found in the filename
+        dt_from_file = ImageUtils.get_dt_from_name(filename)
+        if dt_from_file is not None:
+            return dt_from_file
+
+        # Next, check to see if it is even a file and then begin
         if os.path.isfile(filename):
             try:
                 # First method uses exif and works mainly for images
@@ -89,9 +94,6 @@ class ImageUtils:
             if "- Creation date: " in line:
                 return line.replace("- Creation date: ", "")
 
-        # Parse metadata failed.
-        # TODO try to grab date from filename
-        #
         # Last hope so returning None
         return None
 
@@ -100,10 +102,19 @@ class ImageUtils:
         if isinstance(filename, str):
             m = re.search(r'(20\d{2}[-:.]\d{2}[-:.]\d{2})|(20\d{2}\d{2}\d{2})', filename)
             dt_frm_name = ""
+
             if m is not None:
                 dt_frm_name = m.group()
+            stripped_dt = re.sub(r'[-:.]', "", dt_frm_name)
 
-            return dt_frm_name.replace(r'[-:.]', "-")
+            if len(stripped_dt) is 8:
+                formatted_dt = stripped_dt[:4] + ":" + stripped_dt[4:]
+                formatted_dt2 = formatted_dt[:7] + ":" + formatted_dt[7:]
+                return formatted_dt2 + " 00:00:00"
+
+            # It's all or nothing
+            return None
+        return None
 
     @staticmethod
     def get_dt_captured_split(str_dt="0000:00:00 00:00:00"):

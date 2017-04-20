@@ -10,7 +10,7 @@ class ImageUtilsTest(unittest.TestCase):
         self.assertEqual("0000:00:00 00:00:00", ImageUtils.get_dt_captured(
             "/Users/paulottley/Desktop/SortSource/images_images_09-September_New_Malibu.JPG"), "Malibu check")
 
-        self.assertEqual("2013-05-17 18:04:48", ImageUtils.get_dt_captured(
+        self.assertEqual("2013:05:17 00:00:00", ImageUtils.get_dt_captured(
             "/Users/paulottley/Desktop/SortSource/Family_VID_20130517_130427.3gp"), "3gp check")
 
         self.assertEqual("2012-09-25 19:40:24", ImageUtils.get_dt_captured(
@@ -27,6 +27,8 @@ class ImageUtilsTest(unittest.TestCase):
                      None,
                      2,
                      "video_Family_2010:09:07_family.mp4"]
+
+        self.assertEqual("2013:09:23 00:00:00", ImageUtils.get_dt_from_name(filenames[0]))
 
         for file in filenames:
             print(ImageUtils.get_dt_from_name(file))
