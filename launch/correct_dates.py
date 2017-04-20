@@ -3,10 +3,13 @@
 
 import re
 
+from app import FileUtils
+from app import ImageUtils
 from app import NavUtil
 
 
-STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library/3gp"
+STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library/wmv"
+STR_DIR2 = r"/Users/paulottley/Desktop/SortSource"
 
 all_files1 = NavUtil.walk_dir(STR_DIR1, STR_DIR1)
 
@@ -18,14 +21,19 @@ all_files1 = NavUtil.walk_dir(STR_DIR1, STR_DIR1)
 
 # Update date
 
-regex = re.compile(r'20\d{2}')  # /(20\d{6})|(20\d{2}-\d{2}-\d{2})/g')
-
 for file in all_files1:
-    m = re.search(r'\d{4}-\d{2}-\d{2}', file.get_filename())  # regex.match(file.get_filename())
-    dtfrmname = ""
-    if m is not None:
-        dtfrmname = m.group()
+    print("Before Filename: {0} date: {1} filename parser date: {2}".format(file.get_filename(),
+                                                                            file.get_date_taken(),
+                                                                            ImageUtils.get_dt_from_parser(
+                                                                                file.get_full_path())))
 
-    print("Filename: {0} date: {1} filename_date: {2}".format(file.get_filename(),
-                                                              file.get_date_taken(),
-                                                              dtfrmname))
+    file_type = FileUtils.get_file_type(file.get_filename())
+    date = ImageUtils.get_original_date(file.get_full_path())
+    if file_type == "mp4":
+        dt = ImageUtils.get_dt_captured_split(date)
+        ImageUtils.set_date(file.get_full_path(), dt.year, dt.month, dt.day)
+
+    print("After Filename: {0} date: {1} filename parser date: {2}".format(file.get_filename(),
+                                                                           file.get_date_taken(),
+                                                                           ImageUtils.get_dt_from_parser(
+                                                                               file.get_full_path())))

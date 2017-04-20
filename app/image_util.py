@@ -17,7 +17,7 @@ from app import Rules
 class ImageUtils:
 
     @staticmethod
-    def get_dt_captured(filename):
+    def get_original_date(filename):
         # First, see if the date is found in the filename
         dt_from_file = ImageUtils.get_dt_from_name(filename)
         if dt_from_file is not None:
@@ -35,7 +35,7 @@ class ImageUtils:
 
             except Exception as err:
                 if Rules.get_debug() is True:
-                    print("get_dt_captured(): Metadata extraction error: %s" % err)
+                    print("get_original_date(): Metadata extraction error: %s" % err)
 
             # If the date wasn't found or didn't exist, try a different approach
             dt = ImageUtils.get_dt_from_parser(filename)

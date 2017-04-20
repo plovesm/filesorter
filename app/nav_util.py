@@ -53,7 +53,7 @@ class NavUtil:
 
                     # Step 2: Add metadata of size and date to object
                     fs_file.set_size(FileUtils.get_file_size(fs_file.get_full_path()))
-                    fs_file.set_date_taken(ImageUtils.get_dt_captured(fs_file.get_full_path()))
+                    fs_file.set_date_taken(ImageUtils.get_original_date(fs_file.get_full_path()))
 
                     # Step 3: Determine file type and tag
                     current_file = NavUtil.sort_file_type(fs_file)

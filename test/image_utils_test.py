@@ -4,16 +4,16 @@ from app import ImageUtils
 
 class ImageUtilsTest(unittest.TestCase):
     def test_get_dt_captured(self):
-        self.assertEqual("2017:04:14 00:51:40", ImageUtils.get_dt_captured(
+        self.assertEqual("2017:04:14 00:51:40", ImageUtils.get_original_date(
                             "/Users/paulottley/Desktop/SortSource/IMG_4739.JPG"), "Happy Path")
 
-        self.assertEqual("0000:00:00 00:00:00", ImageUtils.get_dt_captured(
+        self.assertEqual("0000:00:00 00:00:00", ImageUtils.get_original_date(
             "/Users/paulottley/Desktop/SortSource/images_images_09-September_New_Malibu.JPG"), "Malibu check")
 
-        self.assertEqual("2013:05:17 00:00:00", ImageUtils.get_dt_captured(
+        self.assertEqual("2013:05:17 00:00:00", ImageUtils.get_original_date(
             "/Users/paulottley/Desktop/SortSource/Family_VID_20130517_130427.3gp"), "3gp check")
 
-        self.assertEqual("2012-09-25 19:40:24", ImageUtils.get_dt_captured(
+        self.assertEqual("2012-09-25 19:40:24", ImageUtils.get_original_date(
             "/Users/paulottley/Desktop/SortSource/videos_videos_Family_IMG_0063.MOV"), "MOV check")
 
     def test_get_dt_from_filename(self):
@@ -66,12 +66,12 @@ class ImageUtilsTest(unittest.TestCase):
                             "/Users/paulottley/Google Drive/MomsDadsPhotos/IMG_0002.jpg"))
 
     def test_set_date(self):
-        self.assertEqual("0000:00:00 00:00:00", ImageUtils.get_dt_captured(
+        self.assertEqual("0000:00:00 00:00:00", ImageUtils.get_original_date(
             "/Users/paulottley/Desktop/SortSource/Family_VID_20130517_130053.mp4"), "mp4 check")
 
         ImageUtils.set_date("/Users/paulottley/Desktop/SortSource/Family_VID_20130517_130218.mp4", 2013, 5, 17)
 
-        self.assertEqual("2013:05:17 18:04:48", ImageUtils.get_dt_captured(
+        self.assertEqual("2013:05:17 18:04:48", ImageUtils.get_original_date(
             "/Users/paulottley/Desktop/SortSource/Family_VID_20130517_130218.mp4"), "mp4 check")
 
 
