@@ -3,6 +3,7 @@
 # @copyright 2017
 import os
 import datetime
+import re
 
 from app import Mov
 from PIL import Image
@@ -32,7 +33,7 @@ class ImageUtils:
                     print("get_dt_captured(): Metadata extraction error: %s" % err)
 
             # If the date wasn't found or didn't exist, try a different approach
-            dt = ImageUtils.get_alt_metadata(filename)
+            dt = ImageUtils.get_dt_from_parser(filename)
             if dt is not None:
                 return dt
             else:
@@ -58,7 +59,7 @@ class ImageUtils:
             return "NotFound"
 
     @staticmethod
-    def get_alt_metadata(filename):
+    def get_dt_from_parser(filename):
         # First create a parser
         parser = createParser(filename)
         if not parser:
@@ -88,8 +89,21 @@ class ImageUtils:
             if "- Creation date: " in line:
                 return line.replace("- Creation date: ", "")
 
-        # Parse metadata failed. Last hope so returning None
+        # Parse metadata failed.
+        # TODO try to grab date from filename
+        #
+        # Last hope so returning None
         return None
+
+    @staticmethod
+    def get_dt_from_name(filename=""):
+        if isinstance(filename, str):
+            m = re.search(r'(20\d{2}[-:.]\d{2}[-:.]\d{2})|(20\d{2}\d{2}\d{2})', filename)
+            dt_frm_name = ""
+            if m is not None:
+                dt_frm_name = m.group()
+
+            return dt_frm_name.replace(r'[-:.]', "-")
 
     @staticmethod
     def get_dt_captured_split(str_dt="0000:00:00 00:00:00"):
