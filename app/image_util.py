@@ -105,7 +105,7 @@ class ImageUtils:
 
             if m is not None:
                 dt_frm_name = m.group()
-            stripped_dt = re.sub(r'[-:.]', "", dt_frm_name)
+            stripped_dt = re.sub(r'\D', "", dt_frm_name)
 
             if len(stripped_dt) is 8:
                 formatted_dt = stripped_dt[:4] + ":" + stripped_dt[4:]
@@ -121,7 +121,7 @@ class ImageUtils:
 
         try:
             # First split on any spaces
-            dt = str_dt.split()[0]
+            dt = str_dt.split(" ")[0]
 
             # Go through date and extract year, month
             if dt is not None:
@@ -137,10 +137,10 @@ class ImageUtils:
             return d
         except ValueError as err:
             print("Not a valid YYYY:MM:DD date pattern.")
-            return err
+            return datetime.datetime.strptime("2000:01:01", "%Y:%m:%d")
         except Exception as err:
             print("Unknown error has occurred: {0}".format(err))
-            return err
+            return datetime.datetime.strptime("2000:02:02", "%Y:%m:%d")
 
     @staticmethod
     def get_dimensions(f):
@@ -159,4 +159,4 @@ class ImageUtils:
                 d = datetime.datetime.strptime(strdt, "%Y-%m-%d %H:%M:%S")
                 m.set_date(d)
         except Exception as err:
-            print("Setting date failed: " + err)
+            print("Setting date failed: {0}".format(err))
