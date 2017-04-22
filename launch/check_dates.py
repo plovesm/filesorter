@@ -4,9 +4,10 @@
 
 from app import NavUtil
 
-STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library/dv"
+STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library/mpg"
+STR_DIR2 = r"/Users/paulottley/Desktop/SortSource"
 
-all_files1 = NavUtil.walk_dir(STR_DIR1, STR_DIR1)
+all_files1 = NavUtil.walk_dir(STR_DIR2, STR_DIR2)
 
 # Check date of original file
 

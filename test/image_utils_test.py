@@ -4,17 +4,21 @@ from app import ImageUtils
 
 class ImageUtilsTest(unittest.TestCase):
     def test_get_dt_captured(self):
-        self.assertEqual("2017:04:14 00:51:40", ImageUtils.get_dt_captured(
+        self.assertEqual("1992:03:01 00:00:00", ImageUtils.get_original_date(
+            "/Users/paulottley/Desktop/SortSource/Ottley_Home_Movies_19920301_3.mp4"), "1900 check")
+
+        self.assertEqual("2017:04:14 00:51:40", ImageUtils.get_original_date(
                             "/Users/paulottley/Desktop/SortSource/IMG_4739.JPG"), "Happy Path")
 
-        self.assertEqual("0000:00:00 00:00:00", ImageUtils.get_dt_captured(
+        self.assertEqual("0000:00:00 00:00:00", ImageUtils.get_original_date(
             "/Users/paulottley/Desktop/SortSource/images_images_09-September_New_Malibu.JPG"), "Malibu check")
 
-        self.assertEqual("2013-05-17 18:04:48", ImageUtils.get_dt_captured(
+        self.assertEqual("2013-05-17 18:04:48", ImageUtils.get_original_date(
             "/Users/paulottley/Desktop/SortSource/Family_VID_20130517_130427.3gp"), "3gp check")
 
-        self.assertEqual("2012-09-25 19:40:24", ImageUtils.get_dt_captured(
+        self.assertEqual("2012-09-25 19:40:24", ImageUtils.get_original_date(
             "/Users/paulottley/Desktop/SortSource/videos_videos_Family_IMG_0063.MOV"), "MOV check")
+
 
     def test_get_dt_from_filename(self):
         filenames = ["video_Family_2013-09-23-09-36-45.mov",

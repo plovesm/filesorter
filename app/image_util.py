@@ -100,7 +100,7 @@ class ImageUtils:
     @staticmethod
     def get_dt_from_name(filename=""):
         if isinstance(filename, str):
-            m = re.search(r'(20\d{2}[-:.]\d{2}[-:.]\d{2})|(20\d{2}\d{2}\d{2})', filename)
+            m = re.search(r'([12][09]\d{2}[-:.]\d{2}[-:.]\d{2})|([12][09]\d{2}\d{2}\d{2})', filename)
             dt_frm_name = ""
 
             if m is not None:
