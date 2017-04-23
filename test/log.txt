@@ -97,3 +97,12 @@ File Name= 022.MOV, Size= 66908494, Type= v
 Size of all duplicates= 816.5364 GB
 
 Process finished with exit code
+
+
+MOV
+Total count: 7199 Zero Count: 1531
+
+All:
+Total count: 111783 Zero Count: 4127
+
+Jpeg:
