@@ -109,6 +109,7 @@ class ImageUtils:
 
             if m is not None:
                 dt_frm_name = m.group()
+
             stripped_dt = re.sub(r'\D', "", dt_frm_name)
 
             if len(stripped_dt) is 8:
@@ -149,6 +150,19 @@ class ImageUtils:
     @staticmethod
     def get_dimensions(f):
         return "{0}{1}{2}".format(Image.open(f)._getexif()[40962], "x",Image.open(f)._getexif()[40963])
+
+    @staticmethod
+    def remove_false_datestamp(filename):
+        file = filename
+        m = re.search(r'^(20\d{2}\d{2}\d{2}-)', file)
+        if m is not None:
+            new_file = file.replace(m.group(), "")
+
+            print(new_file)
+            if file != new_file:
+                file = new_file
+
+        return file
 
     @staticmethod
     def set_date(fn, year, month, day):

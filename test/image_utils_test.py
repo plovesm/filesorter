@@ -19,6 +19,18 @@ class ImageUtilsTest(unittest.TestCase):
         self.assertEqual("2012-09-25 19:40:24", ImageUtils.get_original_date(
             "/Users/paulottley/Desktop/SortSource/videos_videos_Family_IMG_0063.MOV"), "MOV check")
 
+    def test_remove_false_timestamp(self):
+        test_name = "20150803-042006_20150505_221117_LLS.jpg"
+
+        self.assertEqual("042006_20150505_221117_LLS.jpg", ImageUtils.remove_false_datestamp(test_name))
+
+        test_name = "042006_20150803-20150505_221117_LLS.jpg"
+
+        self.assertEqual("042006_20150803-20150505_221117_LLS.jpg", ImageUtils.remove_false_datestamp(test_name))
+
+        test_name = "20150803-042006_20150505-221117_LLS.jpg"
+
+        self.assertEqual("042006_20150505-221117_LLS.jpg", ImageUtils.remove_false_datestamp(test_name))
 
     def test_get_dt_from_filename(self):
         filenames = ["video_Family_2013-09-23-09-36-45.mov",
