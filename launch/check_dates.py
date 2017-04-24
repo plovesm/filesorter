@@ -4,7 +4,7 @@
 
 from app import NavUtil
 
-STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library/jpg"
+STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library/m4v"
 STR_DIR2 = r"/Users/paulottley/Desktop/SortSource"
 
 all_files1 = NavUtil.walk_dir(STR_DIR1, STR_DIR1)

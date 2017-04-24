@@ -145,16 +145,14 @@ class NavUtil:
         print("Total files to move {0}".format(len(all_files)))
 
         for x in all_files:
-            FileUtils.move_file(x.get_full_path(),
-                                "{0}{1}".format(x.get_tgt_dir(), x.get_tgt_folder()), x.get_tgt_filename())
+            FileUtils.move_file(x.get_full_path(), x.get_tgt_dir(), x.get_tgt_filename())
 
     @staticmethod
     def copy_files(all_files):
         print("Total files to copy {0}".format(len(all_files)))
 
         for x in all_files:
-            FileUtils.copy_file(x.get_full_path(),
-                                "{0}{1}".format(x.get_tgt_dir(), x.get_tgt_folder()), x.get_tgt_filename())
+            FileUtils.copy_file(x.get_full_path(), x.get_tgt_dir(), x.get_tgt_filename())
 
 
     @staticmethod

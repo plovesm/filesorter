@@ -23,6 +23,8 @@ class ImageUtilsTest(unittest.TestCase):
     def test_get_dt_from_filename(self):
         filenames = ["video_Family_2013-09-23-09-36-45.mov",
                      "video_Family_2013-09-23-09-36-45.3gp",
+                     "video_Family_10334467.3gp",
+                     "video_Family_19334467.3gp",
                      "video.Family.2013.06.07.mov",
                      "video_Family_20100907_family.mp4",
                      "20031112.3gp",

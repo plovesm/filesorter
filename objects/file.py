@@ -34,7 +34,7 @@ class FSfile:
         return self._src_dir + self._filename
 
     def get_full_tgt_path(self):
-        return self._tgt_dir + self._tgt_folder + self._tgt_filename
+        return self._tgt_dir + self._tgt_filename
 
     def get_src_dir(self):
         return self._src_dir

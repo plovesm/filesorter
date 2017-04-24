@@ -1,33 +1,36 @@
 # @author Paul Ottley
 # @copyright 2017
 # File used to start the FilesSorter launch
+import os
 
-
-from app import NavUtil
+from app import NavUtil, ImageUtils, ReportUtil
 
 STR_DIR1 = r"/Users/paulottley/Movies/iMovie Library.imovielibrary/4-2-17/Original Media"
 STR_DIR2 = r"/Volumes/OttFamilyShare/Backups/Pictures"
-STR_DIR3 = r"/Volumes/MyBook2TB/Backups/Library/wmv"
+STR_DIR3 = r"/Volumes/MyBook2TB/Backups/Library"
 STR_DIR4 = r"/Users/paulottley/Google Drive/MomsDadsPhotos"
 
-TGT_DIR1 = r"/Users/paulottley/Desktop/SortTarget"
+TGT_DIR1 = r"/Volumes/MyBook2TB/Backups/SortTarget"
 
-fs = NavUtil(STR_DIR4, TGT_DIR1)
-
-all_files1 = fs.walk_dir(STR_DIR4, TGT_DIR1)
+all_files1 = NavUtil.walk_dir(STR_DIR3, STR_DIR3)
 
 file_lists = [all_files1, []]
 
-fs.move_files(file_lists[0])
-
-# fs.final_report(file_lists)
-
 for file in all_files1:
-    print("filename: {0}, date: {1}".format(file.get_filename(), file.get_date_taken()))
+    # noinspection PyBroadException
+    try:
+        dt = ImageUtils.get_dt_captured_split(file.get_date_taken())
+        file.set_tgt_dir("{0}{1}{2}{3}{4}{5}".format(file.get_tgt_dir(),
+                                                     file.get_tgt_folder(),
+                                                     dt.year,
+                                                     os.sep,
+                                                     dt.month,
+                                                     os.sep))
+        # print(file.get_full_tgt_path())
+    except Exception as err:
+        print("Date failed on: {0}".format(file.get_filename()))
+        file.set_tgt_dir(file.get_tgt_dir() + os.sep + "date_err")
 
-"""
-for root, dirs, files in os.walk(STR_DIR4):
-    for file in files:
-        move(root + os.sep + file, STR_DIR3 + os.sep + file)
-        count += 1
-"""
+NavUtil.move_files(all_files1)
+
+ReportUtil.final_report(file_lists)

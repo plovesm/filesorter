@@ -4,12 +4,12 @@
 import os
 from shutil import move
 
-from app import NavUtil
+from app import NavUtil, FileUtils
 
 STR_DIR1 = r"/Users/paulottley/Movies/iMovie Library.imovielibrary/4-2-17/Original Media"
 STR_DIR2 = r"/Volumes/OttFamilyShare/Backups/Library/To be imported"
-STR_DIR3 = r"/Volumes/MyBook2TB/Backups/Library/"
-
+STR_DIR3 = r"/Volumes/MyBook2TB/Backups/Library"
+# STR_DIR3 = r"/Volumes/MyBook2TB/Backups/SortTarget"
 TGT_DIR1 = r"/Volumes/MyBook2TB/Backups/Library/videos"
 
 for root, dirs, files in os.walk(STR_DIR3):
@@ -18,6 +18,20 @@ for root, dirs, files in os.walk(STR_DIR3):
             new_file = file.replace("...", "")
             print(root + os.sep + new_file)
             os.rename(root + os.sep + file, root + os.sep + new_file)
+        if "((d))" in file:
+            new_file = file.replace("((d))", "")
+            if FileUtils.does_file_exist(new_file, root + os.sep) is not True:
+                print(root + os.sep + new_file)
+                os.rename(root + os.sep + file, root + os.sep + new_file)
+            else:
+                print("file exists")
+        if "((d))" in file:
+            new_file = file.replace("((d))", "")
+            if FileUtils.does_file_exist(new_file, root + os.sep) is not True:
+                print(root + os.sep + new_file)
+                os.rename(root + os.sep + file, root + os.sep + new_file)
+            else:
+                print("file exists")
 
 """
 fs = FileSorter(STR_DIR2, STR_DIR2)
