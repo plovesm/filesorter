@@ -3,6 +3,7 @@
 # @copyright 2017
 import os
 import datetime
+import platform
 import re
 
 from app import Mov
@@ -120,6 +121,26 @@ class ImageUtils:
             # It's all or nothing
             return None
         return None
+
+    @staticmethod
+    def get_dt_created_from_file(file):
+        if platform.system() == 'Windows':
+            creation_date = os.path.getctime(file.get_full_path())
+        else:
+            stat = os.stat(file.get_full_path())
+            try:
+                creation_date = stat.st_birthtime
+            except AttributeError:
+                # We're probably on Linux. No easy way to get creation dates here,
+                # so we'll settle for when its content was last modified.
+                creation_date = file.get_date_taken()
+
+        if "-" in str(creation_date) or ":" in str(creation_date):
+            dt = ImageUtils.get_dt_captured_split(creation_date)
+        else:
+            dt = datetime.date.fromtimestamp(creation_date)
+
+        return dt
 
     @staticmethod
     def get_dt_captured_split(str_dt="0000:00:00 00:00:00"):
