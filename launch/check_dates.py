@@ -40,10 +40,9 @@ for file in all_files1:
     dt = datetime.date.fromtimestamp(creation_date)
 
     # dt = datetime.date.fromordinal(creation_date)
-    creation_date_str = "{0}-{1}-{2} 00:00:00".format(dt.year, dt.month, dt.day)
-    print(creation_date_str)
+    creation_date_str = "{0}:{1}:{2} 00:00:00".format(dt.year, dt.month, dt.day)
     # print("Created: %s" % time.ctime(os.path.getctime(file.get_full_path())))
 
-    print("Filename: {0} date: {1}".format(file.get_filename(), creation_date))
+    print("Filename: {0} date: {1}".format(file.get_filename(), creation_date_str))
 
 print("Total count: {0} Zero Count: {1}".format(count, zero_count))
