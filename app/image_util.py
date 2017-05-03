@@ -168,13 +168,26 @@ class ImageUtils:
     def set_date(fn, year, month, day):
         try:
             dt = datetime.date(year, month, day)
-            strdt = dt.strftime("%Y-%m-%d %H:%M:%S")
+            str_dt = dt.strftime("%Y-%m-%d %H:%M:%S")
 
             m = Mov(fn)
             m.parse()
 
-            if strdt is not "":
-                d = datetime.datetime.strptime(strdt, "%Y-%m-%d %H:%M:%S")
+            if str_dt is not "":
+                d = datetime.datetime.strptime(str_dt, "%Y-%m-%d %H:%M:%S")
                 m.set_date(d)
         except Exception as err:
             print("Setting date failed: {0}".format(err))
+            # See if it is an image and try updating Exif
+            """
+            try:
+                img = pexif.JpegFile.fromFile(fn)
+
+                # Get the orientation if it exists
+                image_tags = img.exif.primary.tags
+                # img.exif.primary.Orientation = [1]
+                # img.writeFile(fn)
+                print(image_tags)
+            except Exception as err:
+                print("Image dates didn't work: " + err)
+            """

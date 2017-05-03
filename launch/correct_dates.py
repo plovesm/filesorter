@@ -6,10 +6,10 @@ import re
 from app import FileUtils, Rules, ImageUtils, NavUtil
 
 
-STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library/mpg"
+STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library/videos/Cleanup"
 STR_DIR2 = r"/Users/paulottley/Desktop/SortSource"
 
-all_files1 = NavUtil.walk_dir(STR_DIR2, STR_DIR2)
+all_files1 = NavUtil.walk_dir(STR_DIR1, STR_DIR1)
 
 # Check date of original file
 
