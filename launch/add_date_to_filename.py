@@ -2,7 +2,11 @@
 # @copyright 2017
 # File used to start the FilesSorter launch
 import os
+import platform
+import datetime, time
 
+from app import FileUtils
+from app import ImageUtils
 from app import NavUtil
 
 # STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library/m4v"
@@ -25,12 +29,24 @@ for file in all_files1:
     if "0000:00:00 00:00:00" == file.get_date_taken():
         zero_count += 1
 
-    """
-    if "Clip_" in file.get_filename():
-        new_file = file.get_filename().replace("Clip_", "VidArch_")
+    dt = ImageUtils.get_dt_created_from_file(file)
+    month = str(dt.month)
+    if dt.month < 10:
+        month = "0" + month
+
+    day = str(dt.day)
+    if dt.day < 10:
+        day = "0" + day
+
+    creation_date_str = "{0}-{1}-{2}".format(dt.year, month, day)
+
+    new_file = file.get_filename().replace(" #", "_{0}_".format(creation_date_str))
+    if FileUtils.does_file_exist(new_file, file.get_src_dir()) is not True:
         print(file.get_src_dir() + new_file)
         os.rename(file.get_full_path(), file.get_src_dir() + new_file)
-    """
-    print("Filename: {0} date: {1}".format(file.get_filename(), file.get_date_taken()))
+    else:
+        print(new_file + "file exists")
+
+    print("Filename: {0} date: {1}".format(file.get_filename(), file.get_date_taken()))  # creation_date_str))
 
 print("Total count: {0} Zero Count: {1}".format(count, zero_count))

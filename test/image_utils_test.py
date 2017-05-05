@@ -33,23 +33,27 @@ class ImageUtilsTest(unittest.TestCase):
         self.assertEqual("042006_20150505-221117_LLS.jpg", ImageUtils.remove_false_datestamp(test_name))
 
     def test_get_dt_from_filename(self):
-        filenames = ["video_Family_2013-09-23-09-36-45.mov",
-                     "video_Family_2013-9-23-09-36-45.mov",
-                     "video_Family_2013-9-3.mov",
-                     "video_Family_2013-09-23-09-36-45.3gp",
-                     "video_Family_10334467.3gp",
-                     "video_Family_19334467.3gp",
-                     "video.Family.2013.06.07.mov",
-                     "video_Family_20100907_family.mp4",
-                     "20031112.3gp",
-                     "IMG_2001.jpg",
-                     "",
-                     None,
-                     2,
-                     "video_Family_2010:09:07_family.mp4"]
 
-        for file in filenames:
-            print(ImageUtils.get_dt_from_name(file))
+        self.assertEqual("2013:09:23 00:00:00", ImageUtils.get_dt_from_name("video_Family_2013-09-23-09-36-45.mov"), "Test 1")
+        self.assertEqual("2013:09:23 00:00:00", ImageUtils.get_dt_from_name("video_Family_2013-9-23-09-36-45.mov"), "Test 2")
+        self.assertEqual("2013:09:03 00:00:00", ImageUtils.get_dt_from_name("video_Family_2013-9-3.mov"), "Test 3")
+        self.assertEqual("2013:09:03 00:00:00", ImageUtils.get_dt_from_name("video_Family_2013-9-03.mov"), "Test 4")
+        self.assertEqual("2013:09:03 00:00:00", ImageUtils.get_dt_from_name("video_Family_2013-09-3.mov"), "Test 5")
+        self.assertEqual("2013:10:09 00:00:00", ImageUtils.get_dt_from_name("video_Family_2013-10-9.mov"), "Test 6")
+        self.assertEqual("2013:11:23 00:00:00", ImageUtils.get_dt_from_name("video_Family_2013-11-23.mov"), "Test 7")
+        self.assertEqual("2013:09:13 00:00:00", ImageUtils.get_dt_from_name("video_Family_2013-9-13.mov"), "Test 8")
+        self.assertEqual("2013:09:23 00:00:00", ImageUtils.get_dt_from_name("video_Family_2013-09-23-09-36-45.3gp"), "Test 9")
+        self.assertEqual(None, ImageUtils.get_dt_from_name("video_Family_10334467.3gp"), "Test 10")
+        self.assertEqual(None, ImageUtils.get_dt_from_name("video_Family_19334467.3gp"), "Test 11")
+        self.assertEqual("2013:06:07 00:00:00", ImageUtils.get_dt_from_name("video.Family.2013.06.07.mov"), "Test 12")
+        self.assertEqual("2010:09:07 00:00:00", ImageUtils.get_dt_from_name("video_Family_20100907_family.mp4"), "Test 13")
+        self.assertEqual("1933:09:07 00:00:00", ImageUtils.get_dt_from_name("video_Family_19330907_family.mp4"), "Test 14")
+        self.assertEqual("2003:11:12 00:00:00", ImageUtils.get_dt_from_name("20031112.3gp"), "Test 15")
+        self.assertEqual(None, ImageUtils.get_dt_from_name(""), "Test 16")
+        self.assertEqual(None, ImageUtils.get_dt_from_name(None), "Test 17")
+        self.assertEqual(None, ImageUtils.get_dt_from_name(2), "Test 18")
+        self.assertEqual("2010:09:07 00:00:00", ImageUtils.get_dt_from_name("video_Family_2010:09:07_family.mp4"), "Test 19")
+        self.assertEqual(None, ImageUtils.get_dt_from_name("Frog"), "Test 20")
 
     def test_get_dt_captured_split(self):
         dt = ImageUtils.get_dt_captured_split("2014:05:23 10:23:32")

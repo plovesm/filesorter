@@ -101,22 +101,49 @@ class ImageUtils:
     @staticmethod
     def get_dt_from_name(filename=""):
         if isinstance(filename, str):
-            # m = re.search(r'([12][09]\d{2}[-:.]\d{2}[-:.]\d{2})|([12][09]\d{2}\d{2}\d{2})', filename)
-            m = re.search(r'(20\d{2}[-:._]\d{1,2}[-:._]\d{1,2})|'
-                          r'(19\d{2}[-:._]\d{1,2}[-:._]\d{1,2})|'
-                          r'(20\d{2}\d{1,2}\d{1,2})|'
-                          r'(19\d{2}\d{1,2}\d{1,2})', filename)
             dt_frm_name = ""
+            dt_frm_name_month = ""
+            dt_frm_name_day = ""
 
+            m = re.search(r"(19|20)\d\d[- /.:_]?(1[012]|0?[1-9])[- /.:_]?([12][0-9]|3[01]|0?[1-9])", filename)
+
+            # Pull full date from name
             if m is not None:
                 dt_frm_name = m.group()
 
-            stripped_dt = re.sub(r'\D', "", dt_frm_name)
+            # Pull month from full date
+            m_month = re.search(r"[- /.:_](1[012]|0?[1-9])[- /.:_]", dt_frm_name)
 
+
+            if m_month is not None:
+                dt_frm_name_month = m_month.group()
+                dt_frm_name_month = re.sub(r'\D', "", dt_frm_name_month)
+
+                if len(dt_frm_name_month) is 1:
+                    dt_frm_name_month = "0" + dt_frm_name_month
+
+            # Pull day from full date
+            m_day = re.search(r"[- /.:_]([12][0-9]|3[01]|0?[1-9])$", dt_frm_name)
+
+            if m_day is not None:
+                dt_frm_name_day = m_day.group()
+                dt_frm_name_day = re.sub(r'\D', "", dt_frm_name_day)
+
+                if len(dt_frm_name_day) is 1:
+                    dt_frm_name_day = "0" + dt_frm_name_day
+
+            full_dt_frm_name = dt_frm_name
+
+            # If I had to parse out the month and day then build it back
+            if len(dt_frm_name_month) is 2 and len(dt_frm_name_day) is 2:
+                full_dt_frm_name = dt_frm_name[:4] + dt_frm_name_month + dt_frm_name_day
+
+            stripped_dt = re.sub(r'\D', "", full_dt_frm_name)
+            # TODO figure out how to add a zero on the month and day if not two digits
             if len(stripped_dt) is 8:
                 formatted_dt = stripped_dt[:4] + ":" + stripped_dt[4:]
-                formatted_dt2 = formatted_dt[:7] + ":" + formatted_dt[7:]
-                return formatted_dt2 + " 00:00:00"
+                formatted_dt = formatted_dt[:7] + ":" + formatted_dt[7:]
+                return formatted_dt + " 00:00:00"
 
             # It's all or nothing
             return None
