@@ -114,7 +114,6 @@ class ImageUtils:
             # Pull month from full date
             m_month = re.search(r"[- /.:_](1[012]|0?[1-9])[- /.:_]", dt_frm_name)
 
-
             if m_month is not None:
                 dt_frm_name_month = m_month.group()
                 dt_frm_name_month = re.sub(r'\D', "", dt_frm_name_month)

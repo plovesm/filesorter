@@ -6,8 +6,9 @@ import re
 from app import FileUtils, Rules, ImageUtils, NavUtil
 
 
-STR_DIR1 = r"/Volumes/Macintosh HD/Users/paulottley/Movies/iMovie Library.imovielibrary/5-1-17/Original Media"
-# r"/Volumes/MyBook2TB/Backups/Library/videos/Cleanup"
+# STR_DIR1 = r"/Volumes/Macintosh HD-1/Users/paulottley/Movies/iMovie Library.imovielibrary/5-1-17/Original Media"
+# STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Videos/iMovie Library.imovielibrary/My Movie/Original Media"
+STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library/videos/Cleanup"
 STR_DIR2 = r"/Users/paulottley/Desktop/SortSource"
 
 all_files1 = NavUtil.walk_dir(STR_DIR1, STR_DIR1)
