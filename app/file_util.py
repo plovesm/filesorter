@@ -34,8 +34,8 @@ class FileUtils:
         try:
             if FileUtils.does_file_exist(tgt_filename, tgt_dir):
                 return FileUtils.move_file(src_f, tgt_dir, FileUtils.rename_file(tgt_filename, "((d))"))
-
-            move(src_f, tgt_dir + tgt_filename)
+            destination = tgt_dir + tgt_filename
+            move(src_f, destination)
         except FileNotFoundError:
             print("Err: Could not move to that location. Creating folder...")
             if not os.path.exists(tgt_dir):

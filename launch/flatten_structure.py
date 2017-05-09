@@ -13,7 +13,7 @@ count = 0
 
 for root, dirs, files in os.walk(STR_DIR1):
     for file in files:
-        move(root + os.sep + file, STR_DIR1 + os.sep + file)
+        move(root + os.sep + file, STR_DIR3 + os.sep + file)
         count += 1
 
 print(count)
