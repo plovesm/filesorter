@@ -94,7 +94,8 @@ class ImageUtils:
         for line in metatext:
             if "- Creation date: " in line:
                 return line.replace("- Creation date: ", "")
-
+            elif "- Creation time: " in line:
+                return line.replace("- Creation time: ", "")
         # Last hope so returning None
         return None
 
