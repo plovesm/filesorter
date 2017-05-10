@@ -19,7 +19,12 @@ class ImageUtils:
 
     @staticmethod
     def get_original_date(filename):
-        # First, see if the date is found in the filename
+        # First, try Atom Parser
+        dt_from_atom = ImageUtils.get_dt_from_atom_parser(filename)
+        if dt_from_atom is not None and dt_from_atom is not "0000:00:00 00:00:00":
+            return dt_from_atom
+
+        # Next, see if the date is found in the filename
         dt_from_file = ImageUtils.get_dt_from_name(filename)
         if dt_from_file is not None:
             return dt_from_file
@@ -92,12 +97,25 @@ class ImageUtils:
         if Rules.get_debug() is True:
             print("Printing Metadata")
         for line in metatext:
+            print(line)
             if "- Creation date: " in line:
                 return line.replace("- Creation date: ", "")
             elif "- Creation time: " in line:
                 return line.replace("- Creation time: ", "")
         # Last hope so returning None
         return None
+
+    @staticmethod
+    def get_dt_from_atom_parser(filename=""):
+        fn = filename
+        try:
+            m = Mov(fn)
+            original_date = m.parse()
+
+            return original_date
+        except Exception as err:
+            print("Parser failed finally...")
+            return None
 
     @staticmethod
     def get_dt_from_name(filename=""):

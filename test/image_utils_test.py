@@ -51,6 +51,7 @@ class ImageUtilsTest(unittest.TestCase):
         self.assertEqual("2003:11:12 00:00:00", ImageUtils.get_dt_from_name("20031112.3gp"), "Test 15")
         self.assertEqual(None, ImageUtils.get_dt_from_name(""), "Test 16")
         self.assertEqual(None, ImageUtils.get_dt_from_name(None), "Test 17")
+        self.assertEqual(None, ImageUtils.get_dt_from_name("Megan and Emily Visit_P5020066_1.MOV"), "False positive")
         self.assertEqual(None, ImageUtils.get_dt_from_name(2), "Test 18")
         self.assertEqual("2010:09:07 00:00:00", ImageUtils.get_dt_from_name("video_Family_2010:09:07_family.mp4"), "Test 19")
         self.assertEqual(None, ImageUtils.get_dt_from_name("Frog"), "Test 20")

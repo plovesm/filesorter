@@ -38,6 +38,7 @@ _ATOMS = {
 
 _DATES = ("Creation time", "Modification time")
 
+CREATION_DATE = ""
 
 class Mov(object):
     def __init__(self, fn):
@@ -46,9 +47,14 @@ class Mov(object):
 
     def parse(self):
         fsize = os.path.getsize(self._fn)
-        print("File: {} ({} bytes, {} MB)".format(self._fn, fsize, fsize / (1024. ** 2)))
+        print("\nFile: {} ({} bytes, {} MB)".format(self._fn, fsize, fsize / (1024. ** 2)))
         with open(self._fn, "rb") as self._f:
             self._parse(fsize)
+        print("Date Pulled" + str(self.CREATION_DATE))
+        if self.CREATION_DATE is not None and self.CREATION_DATE is not "" and len(self.CREATION_DATE) >= 18:
+            cDate = self.CREATION_DATE
+            return cDate[:19]
+        return None
 
     def _parse(self, length, depth=0):
         prefix = "  " * depth + "- "
@@ -85,6 +91,7 @@ class Mov(object):
                 vv = vv.decode()
             elif k[i] in _DATES:
                 vv = self._macdate2date(vv)
+                self.CREATION_DATE = vv
             print("{}{}: {}".format(prefix, k[i], vv))
         for offset in spec[3]:
             self._offsets.append(pos + offset)
