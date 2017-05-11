@@ -12,8 +12,8 @@ from app import NavUtil
 # STR_DIR1 = r"/Users/paulottley/Desktop/SortSource"
 # STR_DIR1 = r"/Volumes/Macintosh HD/Users/paulottley/Movies/iMovie Library.imovielibrary/5-1-17/Original Media"
 # STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library/videos/Cleanup"
-# STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library/Cleanup_Botched"
-STR_DIR1 = r"/Users/paulottley/Desktop/Botched"
+STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library"
+# STR_DIR1 = r"/Users/paulottley/Desktop/Botched"
 
 Culprits = ["/Volumes/MyBook2TB/Backups/Library/08-August_P7190292.MOV",
             "/Volumes/MyBook2TB/Backups/Library/08-August_P7200293.MOV",
@@ -97,18 +97,19 @@ for file in all_files1:
     filename = file.get_filename()
     orig_date = file.get_date_taken()
 
-    ImageUtils.get_dt_from_atom_parser(file.get_full_path())
     if "0000:00:00 00:00:00" == orig_date or "2000:01:01 00:00:00" == orig_date:
         zero_count += 1
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~")
-        # FileUtils.move_file(file.get_full_path(), tgt_dir + "Cleanup/", file.get_tgt_filename())
+        if filename[0] is ".":
+            # print("~~~~~~~~~~~~~~~~~~~~~~~~~")
+            FileUtils.move_file(file.get_full_path(), tgt_dir + "Hidden/", file.get_tgt_filename())
+        print("Filename: {0} date: {1}".format(file.get_filename(), orig_date))
 
     m = re.search(r"(19|20)\d\d[- /.:_]?(1[012]|0?[1-9])[- /.:_]?([12][0-9]|3[01]|0?[1-9])", filename)
 
     # Pull full date from name
     if m is None:
         missing_filename_dt += 1
-        print("***********************")
+        # print("***********************")
 
     """
     else:
@@ -123,6 +124,6 @@ for file in all_files1:
 
         FileUtils.move_file(file.get_full_path(), tgt_dir, file.get_tgt_filename())
     """
-    print("Filename: {0} date: {1}".format(file.get_filename(), orig_date))
+    # print("Filename: {0} date: {1}".format(file.get_filename(), orig_date))
 
 print("Total count: {0} Zero Count: {1} Missing date in filename: {2}".format(count, zero_count, missing_filename_dt))

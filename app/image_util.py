@@ -97,7 +97,6 @@ class ImageUtils:
         if Rules.get_debug() is True:
             print("Printing Metadata")
         for line in metatext:
-            print(line)
             if "- Creation date: " in line:
                 return line.replace("- Creation date: ", "")
             elif "- Creation time: " in line:
@@ -114,7 +113,9 @@ class ImageUtils:
 
             return original_date
         except Exception as err:
-            print("Parser failed finally...")
+            if Rules.get_debug() is True:
+
+                print(filename + " Parser failed finally...")
             return None
 
     @staticmethod

@@ -38,21 +38,21 @@ _ATOMS = {
 
 _DATES = ("Creation time", "Modification time")
 
-CREATION_DATE = ""
 
 class Mov(object):
     def __init__(self, fn):
         self._fn = fn
         self._offsets = []
+        self._CREATION_DATE = ""
+        self._OUTPUT_BUFFER = ""
 
     def parse(self):
         fsize = os.path.getsize(self._fn)
-        print("\nFile: {} ({} bytes, {} MB)".format(self._fn, fsize, fsize / (1024. ** 2)))
+        self._OUTPUT_BUFFER += "\nFile: {} ({} bytes, {} MB)".format(self._fn, fsize, fsize / (1024. ** 2))
         with open(self._fn, "rb") as self._f:
             self._parse(fsize)
-        print("Date Pulled" + str(self.CREATION_DATE))
-        if self.CREATION_DATE is not None and self.CREATION_DATE is not "" and len(self.CREATION_DATE) >= 18:
-            cDate = self.CREATION_DATE
+        if self._CREATION_DATE is not None and self._CREATION_DATE is not "" and len(self._CREATION_DATE) >= 18:
+            cDate = self._CREATION_DATE
             return cDate[:19]
         return None
 
@@ -64,7 +64,7 @@ class Mov(object):
             # print(len(data), data)
             al, an = struct.unpack(">I4s", data)
             an = an.decode()
-            print("{}Atom: {} ({} bytes)".format(prefix, an, al))
+            self._OUTPUT_BUFFER += "\n{}Atom: {} ({} bytes)".format(prefix, an, al)
 
             if an in _ATOMS:
                 self._parse_atom(an, al - 8, depth)
@@ -91,8 +91,8 @@ class Mov(object):
                 vv = vv.decode()
             elif k[i] in _DATES:
                 vv = self._macdate2date(vv)
-                self.CREATION_DATE = vv
-            print("{}{}: {}".format(prefix, k[i], vv))
+                self._CREATION_DATE = vv
+            self._OUTPUT_BUFFER += "\n{}{}: {}".format(prefix, k[i], vv)
         for offset in spec[3]:
             self._offsets.append(pos + offset)
 
@@ -101,7 +101,7 @@ class Mov(object):
         data = self._f.read(8)
         brand, version = struct.unpack(">4sI", data)
         brand = brand.decode("latin1")
-        print("{}Brand: {}, version: {}".format(prefix, brand, version))
+        self._OUTPUT_BUFFER += "\n{}Brand: {}, version: {}".format(prefix, brand, version)
         self._f.read(length - 8)
 
     def _parse_udta(self, length, depth):
@@ -112,9 +112,9 @@ class Mov(object):
             data_type = data_type.decode("latin1")
             raw = self._f.read(atom_size - 8)
             if data_type[0] == "(C)":
-                print("{}{}: {}".format(prefix, data_type, raw[3:].decode()))
+                self._OUTPUT_BUFFER += "\n{}{}: {}".format(prefix, data_type, raw[3:].decode())
             else:
-                print("{}{} ({} bytes)".format(prefix, data_type, atom_size - 8))
+                self._OUTPUT_BUFFER += "\n{}{} ({} bytes)".format(prefix, data_type, atom_size - 8)
             n += atom_size
 
     @staticmethod
@@ -130,20 +130,20 @@ class Mov(object):
         return int(sec)
 
     def set_date(self, d):
-        print("Trying this date:" + str(d))
+        self._OUTPUT_BUFFER += "\nTrying this date:" + str(d)
         md = self._date2macdate(d)
-        print("New date: {} ({})".format(d, md))
+        self._OUTPUT_BUFFER += "\nNew date: {} ({})".format(d, md)
         with open(self._fn, "r+b") as f:
-            print("Writing new date at {} positions...".format(len(self._offsets)))
+            self._OUTPUT_BUFFER += "\nWriting new date at {} positions...".format(len(self._offsets))
             for offset in self._offsets:
                 f.seek(offset)
                 data = struct.pack(">I", md)
                 f.write(data)
             f.flush()
-            print("Touching file...")
+            self._OUTPUT_BUFFER += "\nTouching file..."
             ts = time.mktime(d.timetuple())
             os.utime(self._fn, (ts, ts))
-        print("Done! :)")
+        self._OUTPUT_BUFFER += "\nDone! :)"
 
 
 if __name__ == "__main__":
