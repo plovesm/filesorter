@@ -33,7 +33,7 @@ class FileUtils:
         # Move files to image, video, other
         try:
             if FileUtils.does_file_exist(tgt_filename, tgt_dir):
-                return FileUtils.move_file(src_f, tgt_dir, FileUtils.rename_file(tgt_filename, "((d))"))
+                return FileUtils.move_file(src_f, tgt_dir, FileUtils.add_suffix(tgt_filename, "((d))"))
             destination = tgt_dir + tgt_filename
             move(src_f, destination)
         except FileNotFoundError:
@@ -51,7 +51,7 @@ class FileUtils:
         try:
             if FileUtils.does_file_exist(tgt_filename, tgt_dir):
                 # TODO figure out a way to identify same name before copy (Identify in mark duplicates)
-                return FileUtils.copy_file(src_f, tgt_dir, FileUtils.rename_file(tgt_filename, "((d))"))
+                return FileUtils.copy_file(src_f, tgt_dir, FileUtils.add_suffix(tgt_filename, "((d))"))
 
             copyfile(src_f, tgt_dir + tgt_filename)
         except FileNotFoundError:
@@ -68,7 +68,7 @@ class FileUtils:
         return os.path.isfile(str(tgt_dir)+str(filename))
 
     @staticmethod
-    def rename_file(filename, suffix):
+    def add_suffix(filename, suffix):
         # Split the file name on the last "."
         filename_arr = filename.rpartition(".")
         # Append the suffix

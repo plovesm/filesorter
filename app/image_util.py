@@ -24,11 +24,12 @@ class ImageUtils:
         if dt_from_atom is not None and dt_from_atom is not "0000:00:00 00:00:00":
             return dt_from_atom
 
+        """
         # Next, see if the date is found in the filename
         dt_from_file = ImageUtils.get_dt_from_name(filename)
         if dt_from_file is not None:
             return dt_from_file
-
+        """
         # Next, check to see if it is even a file and then begin
         if os.path.isfile(filename):
             try:
@@ -232,10 +233,11 @@ class ImageUtils:
         return file
 
     @staticmethod
-    def set_date(fn, year, month, day):
+    def set_date(fn, str_dt="", year=1950, month=1, day=1):
         try:
-            dt = datetime.date(year, month, day)
-            str_dt = dt.strftime("%Y-%m-%d %H:%M:%S")
+            if str_dt is "":
+                dt = datetime.date(year, month, day)
+                str_dt = dt.strftime("%Y-%m-%d %H:%M:%S")
 
             m = Mov(fn)
             m.parse()

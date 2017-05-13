@@ -48,9 +48,9 @@ class FileUtilsTest(unittest.TestCase):
                                                "/Users/paulottley/Desktop/MomsDadsPhotos/images/IMG_0001.jpg"))
 
     def test_rename_file(self):
-        self.assertEquals("IMG_0001-dup.jpg", FileUtils.rename_file("IMG_0001.jpg", "-dup"))
-        self.assertEquals("IMG_0001None.jpg", FileUtils.rename_file("IMG_0001.jpg", None))
-        self.assertEquals("IMG_00012.jpg", FileUtils.rename_file("IMG_0001.jpg", 2))
+        self.assertEquals("IMG_0001-dup.jpg", FileUtils.add_suffix("IMG_0001.jpg", "-dup"))
+        self.assertEquals("IMG_0001None.jpg", FileUtils.add_suffix("IMG_0001.jpg", None))
+        self.assertEquals("IMG_00012.jpg", FileUtils.add_suffix("IMG_0001.jpg", 2))
 
     def test_hash_file(self):
         self.assertEquals("84365b010f4d772abbc275d8128bfa26",

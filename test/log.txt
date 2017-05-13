@@ -8546,3 +8546,9 @@ Filename: Springfest_100_1580.MOV date: 0000:00:00 00:00:00
 Total count: 1526 Zero Count: 1467 Missing date in filename: 1463
 
 Process finished with exit code 0
+
+
+
+Filename: .DS_Store date: 0000:00:00 00:00:00
+Filename: Evelyn Birth_EvelynsBirth_.mov date: 0000:00:00 00:00:00
+Filename: Idaho_Trip_100_0895.MOV date: 0000:00:00 00:00:00

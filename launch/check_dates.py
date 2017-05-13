@@ -12,8 +12,8 @@ from app import NavUtil
 # STR_DIR1 = r"/Users/paulottley/Desktop/SortSource"
 # STR_DIR1 = r"/Volumes/Macintosh HD/Users/paulottley/Movies/iMovie Library.imovielibrary/5-1-17/Original Media"
 # STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library/videos/Cleanup"
-STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library"
-# STR_DIR1 = r"/Users/paulottley/Desktop/Botched"
+# STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library"
+STR_DIR1 = r"/Users/paulottley/Desktop/Botched"
 
 Culprits = ["/Volumes/MyBook2TB/Backups/Library/08-August_P7190292.MOV",
             "/Volumes/MyBook2TB/Backups/Library/08-August_P7200293.MOV",
@@ -124,6 +124,6 @@ for file in all_files1:
 
         FileUtils.move_file(file.get_full_path(), tgt_dir, file.get_tgt_filename())
     """
-    # print("Filename: {0} date: {1}".format(file.get_filename(), orig_date))
+    print("Filename: {0} date: {1}".format(file.get_filename(), orig_date))
 
 print("Total count: {0} Zero Count: {1} Missing date in filename: {2}".format(count, zero_count, missing_filename_dt))
