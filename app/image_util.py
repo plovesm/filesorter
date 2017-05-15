@@ -19,17 +19,18 @@ class ImageUtils:
 
     @staticmethod
     def get_original_date(filename):
+        # TODO prepare a test sample folder and add some of the files that were zero, 1904, import dates, etc.
+
         # First, try Atom Parser
         dt_from_atom = ImageUtils.get_dt_from_atom_parser(filename)
-        if dt_from_atom is not None and dt_from_atom is not "0000:00:00 00:00:00":
+        if dt_from_atom is not None and dt_from_atom is not "0000:00:00 00:00:00" and "1904" not in dt_from_atom:
             return dt_from_atom
 
-        """
         # Next, see if the date is found in the filename
         dt_from_file = ImageUtils.get_dt_from_name(filename)
         if dt_from_file is not None:
             return dt_from_file
-        """
+
         # Next, check to see if it is even a file and then begin
         if os.path.isfile(filename):
             try:

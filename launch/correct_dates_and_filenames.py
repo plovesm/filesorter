@@ -11,9 +11,9 @@ from app import ImageUtils
 count = 0
 zero_count = 0
 
-STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library"
+STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library/Cleanup"
 # STR_DIR1 = r"/Users/paulottley/Desktop/Botched"
-index = 0
+
 for root, dirs, files in os.walk(STR_DIR1):
     for file in files:
         full_filename = root + os.sep + file
@@ -30,7 +30,7 @@ for root, dirs, files in os.walk(STR_DIR1):
 
         # First, set the date so it is consistent
         # ImageUtils.set_date(full_filename, orig_datetime)
-fc\
+
         # Next, Clean up the name,
         #  - remove all spaces
         #  - check if there is a date mismatch with filename and take earliest
@@ -58,4 +58,7 @@ fc\
         # os.rename(full_filename, full_new_file)
         print(full_new_file)
 
-        index += 1
+        count += 1
+
+print("Total count: {0} Zero Count: {1}".format(count, zero_count))
+
