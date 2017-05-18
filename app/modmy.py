@@ -46,11 +46,13 @@ class Mov(object):
         self._CREATION_DATE = ""
         self._OUTPUT_BUFFER = ""
 
-    def parse(self):
+    def parse(self, output=False):
         fsize = os.path.getsize(self._fn)
         self._OUTPUT_BUFFER += "\nFile: {} ({} bytes, {} MB)".format(self._fn, fsize, fsize / (1024. ** 2))
         with open(self._fn, "rb") as self._f:
             self._parse(fsize)
+        if output is True:
+            print(self._OUTPUT_BUFFER)
         if self._CREATION_DATE is not None and self._CREATION_DATE is not "" and len(self._CREATION_DATE) >= 18:
             cDate = self._CREATION_DATE
             return cDate[:19]

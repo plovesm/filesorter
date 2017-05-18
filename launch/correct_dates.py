@@ -8,7 +8,7 @@ from app import FileUtils, Rules, ImageUtils, NavUtil
 
 # STR_DIR1 = r"/Volumes/Macintosh HD-1/Users/paulottley/Movies/iMovie Library.imovielibrary/5-1-17/Original Media"
 # STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Videos/iMovie Library.imovielibrary/My Movie/Original Media"
-STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library/videos/Cleanup"
+STR_DIR1 = r"/Volumes/Elements2TB/Backups/Library"
 STR_DIR2 = r"/Users/paulottley/Desktop/SortSource"
 
 all_files1 = NavUtil.walk_dir(STR_DIR1, STR_DIR1)
@@ -37,7 +37,7 @@ for file in all_files1:
         print("Date: {0} Filename: {1}".format(date, mp4_full_path))
     """
     dt = ImageUtils.get_dt_captured_split(date)
-    ImageUtils.set_date(file.get_full_path(), dt.year, dt.month, dt.day)
+    ImageUtils.set_date(file.get_full_path(), date, dt.year, dt.month, dt.day)
 
     print("After Filename: {0} date: {1} filename parser date: {2}".format(file.get_filename(),
                                                                            file.get_date_taken(),

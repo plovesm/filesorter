@@ -14,24 +14,28 @@ from hachoir.metadata import extractMetadata
 
 from app import Rules
 
+CURRENT_YEAR = datetime.datetime.now().year
+
 
 class ImageUtils:
 
     @staticmethod
-    def get_original_date(filename):
-        # TODO prepare a test sample folder and add some of the files that were zero, 1904, import dates, etc.
+    def get_original_date(filename, deep=False):
 
         # First, try Atom Parser
-        dt_from_atom = ImageUtils.get_dt_from_atom_parser(filename)
-        if dt_from_atom is not None and dt_from_atom is not "0000:00:00 00:00:00" and "1904" not in dt_from_atom:
-            return dt_from_atom
+        if deep is True and os.path.isfile(filename):
+            dt_from_atom = ImageUtils.get_dt_from_atom_parser(filename)
+            if dt_from_atom is not None and \
+                    dt_from_atom is not "0000:00:00 00:00:00" and \
+                    CURRENT_YEAR >= int(dt_from_atom[:4]) > 1970:
+                return dt_from_atom
 
         # Next, see if the date is found in the filename
         dt_from_file = ImageUtils.get_dt_from_name(filename)
-        if dt_from_file is not None:
+        if dt_from_file is not None and CURRENT_YEAR >= int(dt_from_file[:4]) > 1970:
             return dt_from_file
 
-        # Next, check to see if it is even a file and then begin
+        # Check to see if it is even a file and then begin
         if os.path.isfile(filename):
             try:
                 # First method uses exif and works mainly for images
@@ -109,6 +113,7 @@ class ImageUtils:
     @staticmethod
     def get_dt_from_atom_parser(filename=""):
         fn = filename
+        # noinspection PyBroadException
         try:
             m = Mov(fn)
             original_date = m.parse()
@@ -117,7 +122,7 @@ class ImageUtils:
         except Exception as err:
             if Rules.get_debug() is True:
 
-                print(filename + " Parser failed finally...")
+                print(filename + " Atom Parser failed...")
             return None
 
     @staticmethod
@@ -160,7 +165,6 @@ class ImageUtils:
                 full_dt_frm_name = dt_frm_name[:4] + dt_frm_name_month + dt_frm_name_day
 
             stripped_dt = re.sub(r'\D', "", full_dt_frm_name)
-            # TODO figure out how to add a zero on the month and day if not two digits
             if len(stripped_dt) is 8:
                 formatted_dt = stripped_dt[:4] + ":" + stripped_dt[4:]
                 formatted_dt = formatted_dt[:7] + ":" + formatted_dt[7:]
@@ -234,14 +238,14 @@ class ImageUtils:
         return file
 
     @staticmethod
-    def set_date(fn, str_dt="", year=1950, month=1, day=1):
+    def set_date(fn, str_dt="", year=1950, month=1, day=1, output=False):
         try:
             if str_dt is "":
                 dt = datetime.date(year, month, day)
                 str_dt = dt.strftime("%Y-%m-%d %H:%M:%S")
 
             m = Mov(fn)
-            m.parse()
+            m.parse(output)
 
             if str_dt is not "":
                 d = datetime.datetime.strptime(str_dt, "%Y-%m-%d %H:%M:%S")

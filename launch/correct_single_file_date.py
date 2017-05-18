@@ -12,30 +12,15 @@ from app import ImageUtils
 
 # STR_DIR1 = r"/Users/paulottley/Desktop/SortSource"
 STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library/videos/Cleanup"
-SINGLE_FILE = r"/Volumes/MyBook2TB/Backups/Library/004556_MVI_3205.MOV"
-
-"""
-for root, dirs, files in os.walk(STR_DIR1):
-    for file in files:
-        if "20wkUltrasound" in file:
-            file_name = root + os.sep + file
-            ImageUtils.set_date(file_name,  # Filename
-                                2006,  # Year
-                                3,  # Month
-                                16)  # Day
-
-            print("New Date: {0}".format(ImageUtils.get_original_date(file_name)))
-
-
-"""
-# file_name = r"/Volumes/MyBook2TB/Backups/Library/videos/1904/1/RingVideo_2304932614.mp4"
+SINGLE_FILE = r"/Volumes/Elements2TB/Backups/Library/Fun_and_Games_2004_1212Image0001.mp4"
 
 print("Old Date: {0}".format(ImageUtils.get_original_date(SINGLE_FILE)))
-"""
+
 ImageUtils.set_date(SINGLE_FILE,  # Filename
-                    2017,  # Year
-                    3,  # Month
-                    4)  # Day
+                    "2004-12-12 00:00:00",
+                    1999,  # Year
+                    12,  # Month
+                    1,
+                    True)  # Day
 
 print("New Date: {0}".format(ImageUtils.get_original_date(SINGLE_FILE)))
-"""
