@@ -166,8 +166,8 @@ class ImageUtils:
 
             stripped_dt = re.sub(r'\D', "", full_dt_frm_name)
             if len(stripped_dt) is 8:
-                formatted_dt = stripped_dt[:4] + ":" + stripped_dt[4:]
-                formatted_dt = formatted_dt[:7] + ":" + formatted_dt[7:]
+                formatted_dt = stripped_dt[:4] + "-" + stripped_dt[4:]
+                formatted_dt = formatted_dt[:7] + "-" + formatted_dt[7:]
                 return formatted_dt + " 00:00:00"
 
             # It's all or nothing

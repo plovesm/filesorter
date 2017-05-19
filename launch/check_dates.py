@@ -14,7 +14,7 @@ from app import NavUtil
 # STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library/videos/Cleanup"
 STR_DIR1 = r"/Volumes/Elements2TB/Backups/Library"
 # STR_DIR1 = r"/Users/paulottley/Desktop/Botched"
-LOG_FILE = r"/Users/paulottley/PycharmProjects/filesorter/test/Check_Dates_log.txt"
+LOG_FILE = r"/Users/paulottley/PycharmProjects/filesorter/test/Check_Dates_log_after.txt"
 
 all_files1 = NavUtil.walk_dir(STR_DIR1, STR_DIR1)
 
