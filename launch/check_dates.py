@@ -44,7 +44,7 @@ for file in all_files1:
     dt_frm_embed = ImageUtils.get_dt_from_atom_parser(full_path)
     dt_frm_filename = ImageUtils.get_dt_from_name(filename)
 
-    if "0000:00:00 00:00:00" == orig_date or "2000:01:01 00:00:00" == orig_date:
+    if "0000" in orig_date or "2000-01-01 00:00:00" == orig_date:
         zero_count += 1
         line += "\nZero Date in Filename: {0}".format(full_path)
 
