@@ -18,6 +18,7 @@ file_lists = [all_files1, []]
 
 for file in all_files1:
     # noinspection PyBroadException
+
     try:
         dt = ImageUtils.get_dt_captured_split(file.get_date_taken())
         file.set_tgt_dir("{0}{1}{2}{3}{4}{5}".format(file.get_tgt_dir(),

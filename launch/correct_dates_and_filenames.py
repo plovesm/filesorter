@@ -12,7 +12,7 @@ count = 0
 zero_count = 0
 
 # STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Library"
-STR_DIR1 = r"/Volumes/Elements2TB/Backups/Library"
+STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Videos/Unsupported_Converted"
 # STR_DIR1 = r"/Users/paulottley/Desktop/Botched"
 
 problem_files = []
@@ -35,11 +35,11 @@ for root, dirs, files in os.walk(STR_DIR1):
             FileUtils.move_file(full_filename, r"/Volumes/Elements2TB/Backups/Trash/", file)
 
         else:
-            orig_datetime = ImageUtils.get_original_date(full_filename, True)
+            orig_datetime = ImageUtils.get_original_date(full_filename)
             orig_date = orig_datetime.split(" ")[0]
             new_file = file
 
-            if "0000" in orig_date or "2000" in orig_date:
+            if "0000" in orig_date:
                 if file[0] is not ".":
                     zero_count += 1
 
@@ -55,6 +55,7 @@ for root, dirs, files in os.walk(STR_DIR1):
             #  - remove oddly formatted dates in the filename
             #  - Rename file to have consistent date pattern on the beginning
 
+            new_file = new_file.replace("images_", "")
             new_file = new_file.replace(" ", "_")
 
             print("File: {0} Date: {1}".format(file, orig_datetime))

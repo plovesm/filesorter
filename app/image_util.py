@@ -26,14 +26,9 @@ class ImageUtils:
         if deep is True and os.path.isfile(filename):
             dt_from_atom = ImageUtils.get_dt_from_atom_parser(filename)
             if dt_from_atom is not None and \
-                    dt_from_atom is not "0000:00:00 00:00:00" and \
+                    "0000" not in dt_from_atom and \
                     CURRENT_YEAR >= int(dt_from_atom[:4]) > 1970:
                 return dt_from_atom
-
-        # Next, see if the date is found in the filename
-        dt_from_file = ImageUtils.get_dt_from_name(filename)
-        if dt_from_file is not None and CURRENT_YEAR >= int(dt_from_file[:4]) > 1970:
-            return dt_from_file
 
         # Check to see if it is even a file and then begin
         if os.path.isfile(filename):
@@ -53,9 +48,14 @@ class ImageUtils:
             dt = ImageUtils.get_dt_from_parser(filename)
             if dt is not None:
                 return dt
+
+            # Next, see if the date is found in the filename
+            dt_from_file = ImageUtils.get_dt_from_name(filename)
+            if dt_from_file is not None and CURRENT_YEAR >= int(dt_from_file[:4]) > 1970:
+                return dt_from_file
             else:
                 # Everything failed, so date doesn't exist
-                return "0000:00:00 00:00:00"
+                return "0000-00-00 00:00:00"
 
     @staticmethod
     def get_exif_field(fn, exif, field):
@@ -209,10 +209,21 @@ class ImageUtils:
                     print("Check date: {0}".format(str_dt))
 
             # Convert to date
-            d = datetime.datetime.strptime(dt, "%Y:%m:%d")
+            dt = datetime.datetime.strptime(dt, "%Y:%m:%d")
+            if dt is not None:
+                month = str(dt.month)
+                if dt.month < 10:
+                    month = "0" + month
 
-            # Return the date as a date object
-            return d
+                day = str(dt.day)
+                if dt.day < 10:
+                    day = "0" + day
+
+                year = str(dt.year)
+
+                # Return the date as a date object
+                return year, month, day, dt
+
         except ValueError as err:
             print("Not a valid YYYY:MM:DD date pattern.")
             return datetime.datetime.strptime("2000:01:01", "%Y:%m:%d")

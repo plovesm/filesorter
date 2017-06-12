@@ -9,7 +9,7 @@ from app import NavUtil, FileUtils, ImageUtils
 
 STR_DIR1 = r"/Users/paulottley/Movies/iMovie Library.imovielibrary/4-2-17/Original Media"
 STR_DIR2 = r"/Volumes/OttFamilyShare/Backups/Library/To be imported"
-STR_DIR3 = r"/Volumes/MyBook2TB/Backups/Library/videos/Cleanup"
+STR_DIR3 = r"/Volumes/Elements2TB/Backups/Pictures/images"
 # STR_DIR3 = r"/Volumes/MyBook2TB/Backups/SortTarget"
 TGT_DIR1 = r"/Volumes/MyBook2TB/Backups/Library/videos/Cleanup"
 
@@ -19,8 +19,14 @@ for root, dirs, files in os.walk(STR_DIR3):
             new_file = file.replace("...", "")
             print(root + os.sep + new_file)
             os.rename(root + os.sep + file, root + os.sep + new_file)
-        if "((d))" in file:
-            new_file = file.replace("((d))", "")
+        if "---" in file:
+            new_file = file.replace("---", "-")
+            print(root + os.sep + new_file)
+            os.rename(root + os.sep + file, root + os.sep + new_file)
+        if "0000-00-00" in file:
+            FileUtils.move_file(file, root + os.sep + "zeros" + os.sep, file)
+            """
+            new_file = file.replace("0000-00-00", "0000-00-00")
             if FileUtils.does_file_exist(new_file, root + os.sep) is not True:
                 print(root + os.sep + new_file)
                 os.rename(root + os.sep + file, root + os.sep + new_file)
@@ -48,7 +54,7 @@ for root, dirs, files in os.walk(STR_DIR3):
             else:
                 print(new_file + "file exists")
 
-        """
+
         new_file = ImageUtils.remove_false_datestamp(file)
         if FileUtils.does_file_exist(new_file, root + os.sep) is not True:
             print(root + os.sep + new_file)

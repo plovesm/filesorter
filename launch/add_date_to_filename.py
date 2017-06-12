@@ -8,7 +8,7 @@ import datetime, time
 from app import FileUtils
 from app import ImageUtils
 from app import NavUtil
-STR_DIR1 = r"/Volumes/Elements2TB/Backups/Library/Embed_fail_new"
+STR_DIR1 = r"/Volumes/Elements2TB/Backups/Pictures/images"
 # STR_DIR1 = r"/Users/paulottley/Desktop/SortSource"
 # STR_DIR1 = r"/Volumes/Macintosh HD-1/Users/paulottley/Movies/iMovie Library.imovielibrary/5-1-17/Original Media"
 # STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Videos/iMovie Library.imovielibrary/My Movie/Original Media"
@@ -26,37 +26,27 @@ count = 0
 zero_count = 0
 for file in all_files1:
     count += 1
-    if "0000:00:00 00:00:00" == file.get_date_taken():
-        zero_count += 1
-    """
-
-    dt = ImageUtils.get_dt_created_from_file(file)
-    month = str(dt.month)
-    if dt.month < 10:
-        month = "0" + month
-
-    day = str(dt.day)
-    if dt.day < 10:
-        day = "0" + day
-
-    creation_date_str = "{0}-{1}-{2}".format(dt.year, month, day)
-    """
     full_filename = file.get_full_path()
-    filename = file.get_filename()
+    path, fn = os.path.split(full_filename)
+    date_taken = file.get_date_taken()
 
-    new_file = file.get_filename().replace("_.", ".")  # "_{0}_".format(creation_date_str))
-    new_file = new_file.replace("....", ".")  # "_{0}_".format(creation_date_str))
-    if FileUtils.does_file_exist(new_file, file.get_src_dir()) is not True:
-        print(file.get_src_dir() + new_file)
-        os.rename(file.get_full_path(), file.get_src_dir() + new_file)
+    if "0000" in date_taken:
+        zero_count += 1
+
+    year, month, day, dt = ImageUtils.get_dt_captured_split()
+
+    creation_date_str = "{0}-{1}-{2}".format(year, month, day)
+
+    new_file = fn.replace("images_", "")
+    new_file = new_file.replace("_.", ".")
+    new_file = new_file.replace("....", ".")
+    new_file = "{0}_{1}".format(creation_date_str, fn)
+    if FileUtils.does_file_exist(new_file, path) is not True:
+        print(path + new_file)
+        os.rename(full_filename, path + new_file)
     else:
         print(new_file + " file exists")
 
-    if "." is filename[0]:
-        print("Moving..." + full_filename)
-        FileUtils.move_file(full_filename, r"/Volumes/Elements2TB/Backups/Trash/", filename)
-
-
-    print("Filename: {0} date: {1}".format(file.get_filename(), file.get_date_taken()))  # creation_date_str))
+    print("Filename: {0} date: {1}".format(fn, date_taken))
 
 print("Total count: {0} Zero Count: {1}".format(count, zero_count))
