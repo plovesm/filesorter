@@ -49,7 +49,7 @@ class DatabaseUtil:
         return c.fetchone();
 
     @staticmethod
-    def read_one_record(c, fields_values={'FILENAME' : 'frog.jpg'}):
+    def read_one_record(c, fields_values=[{'FILENAME' : 'frog.jpg'}]):
         select_script = "SELECT * FROM FILES WHERE ("
         for x in fields_values.keys():
             select_script += "{0} = {1}".format(x, fields_values[x])
@@ -59,8 +59,19 @@ class DatabaseUtil:
         c.execute(select_script)
 
     # Update
+    @staticmethod
+    def update_record(c, date_taken, filename):
+        c.execute('''UPDATE FILES SET (?) TO (?) WHEre ? = ?''', ("DATE_TAKEN", date_taken, "FILENAME", filename))
+        DatabaseUtil.commit_transaction(c.connection)
+
+        return True
 
     # Delete
+    @staticmethod
+    def delete_record(c, id):
+        c.execute('''DELETE from FILES WHERE ID = ?''', id)
+        DatabaseUtil.commit_transaction(c.connection)
+        return True
 
     @staticmethod
     def commit_transaction(connection):

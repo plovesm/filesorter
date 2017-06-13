@@ -1,9 +1,12 @@
 # Import smtplib for the actual sending function
 import smtplib
 
+from app.key_store import KeyStore
 
-SENDER = ("devlongfacepbo@gmail.com", "devHomeIdaho")
-RECEIVER = "ott1982@gmail.com"
+key_store = KeyStore()
+
+SENDER = (key_store.get_sender_email(), key_store.get_sender_pwd())
+RECEIVER = key_store.get_receiver()
 
 
 class EmailUtils:
