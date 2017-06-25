@@ -39,6 +39,7 @@ for file in all_files1:
 
     new_file = fn.replace("images_", "")
     new_file = new_file.replace("_.", ".")
+    new_file = new_file.replace("~", "")
     new_file = new_file.replace("....", ".")
     new_file = "{0}_{1}".format(creation_date_str, fn)
     if FileUtils.does_file_exist(new_file, path) is not True:

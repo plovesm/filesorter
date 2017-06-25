@@ -106,7 +106,9 @@ class NavUtil:
 
         for x in all_files:
             for y in all_files_test:
-                if x != y and x.get_size() == y.get_size():
+                x_size = x.get_size()
+                y_size = y.get_size()
+                if x != y and x_size == y_size:
                     if FileUtils.is_file_dup(x.get_full_path(), y.get_full_path()):
                         duplicates.append(y)
                         all_files.remove(y)

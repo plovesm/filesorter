@@ -15,6 +15,23 @@ IMG_TAG = "i"
 VID_TAG = "v"
 OTH_TAG = "o"
 
+MONTHS = {"Jan": "01",
+          "Feb": "02",
+          "Mar": "03",
+          "Apr": "04",
+          "May": "05",
+          "Jun": "06",
+          "Jul": "07",
+          "Aug": "08",
+          "Sep": "09",
+          "Oct": "10",
+          "Nov": "11",
+          "Dec": "12"}
+
+DATE_REGEX_WORD = r"(\w\w\w\s\d{1,2},\s(19|20)\d\d)"
+DATE_REGEX = r"((19|20)\d\d[- /.:_]?(1[012]|0?[1-9])[- /.:_]?([12][0-9]|3[01]|0?[1-9]))"
+DATE_PREFIX_REGEX = DATE_REGEX + "[- /:_]?"
+
 DEBUG = False
 
 IMG_TYPES = ["jpg", "png", "gif", "bmp", "jpeg", "nef", "tif"]
@@ -58,3 +75,19 @@ class Rules:
     @staticmethod
     def get_debug():
         return DEBUG
+
+    @staticmethod
+    def get_date_regex():
+        return DATE_REGEX
+
+    @staticmethod
+    def get_date_regex_prefix():
+        return DATE_PREFIX_REGEX
+
+    @staticmethod
+    def get_date_regex_word():
+        return DATE_REGEX_WORD
+
+    @staticmethod
+    def get_months_list():
+        return MONTHS

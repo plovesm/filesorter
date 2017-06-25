@@ -50,7 +50,8 @@ class ImageUtils:
                 return dt
 
             # Next, see if the date is found in the filename
-            dt_from_file = ImageUtils.get_dt_from_name(filename)
+            path, fn = os.path.split(filename)
+            dt_from_file = ImageUtils.get_dt_from_name(fn)
             if dt_from_file is not None and CURRENT_YEAR >= int(dt_from_file[:4]) > 1970:
                 return dt_from_file
             else:
@@ -132,33 +133,60 @@ class ImageUtils:
             dt_frm_name_month = ""
             dt_frm_name_day = ""
 
-            m = re.search(r"(19|20)\d\d[- /.:_]?(1[012]|0?[1-9])[- /.:_]?([12][0-9]|3[01]|0?[1-9])", filename)
+            date_list = []
+
+            filename_chk = filename
+
+            while re.search(Rules.get_date_regex(), filename_chk):
+                m = re.search(Rules.get_date_regex(), filename_chk)
+                date_list.append(m.group())
+                filename_chk = filename_chk.replace(m.group(), "")
+
+            while re.search(Rules.get_date_regex_word(), filename_chk):
+                m = re.search(Rules.get_date_regex_word(), filename_chk)
+                date_word = m.group()
+                filename_chk = filename_chk.replace(m.group(), "")
+
+                month = Rules.get_months_list()[date_word[:3]]
+                year = date_word[(len(date_word)-4):]
+                day = "01"
+
+                if len(date_word) == 12:
+                    day = date_word[4] + date_word[4]
+                else:
+                    day = "0" + date_word[4]
+
+                date_list.append(year + month + day)
 
             # Pull full date from name
-            if m is not None:
-                dt_frm_name = m.group()
+            if date_list is not None and len(date_list) > 0:
+                dt_frm_name = re.sub(r"\D", "", date_list[0])
+                # Find the oldest date
 
-            # Pull month from full date
-            m_month = re.search(r"[- /.:_](1[012]|0?[1-9])[- /.:_]", dt_frm_name)
+                if len(date_list) > 1:
+                    for date in date_list:
+                        date_chk = re.sub(r"\D", "", date)
+                        if int(date_chk) < int(dt_frm_name):
+                            dt_frm_name = date_chk
 
-            if m_month is not None:
-                dt_frm_name_month = m_month.group()
-                dt_frm_name_month = re.sub(r'\D', "", dt_frm_name_month)
+            try:
 
-                if len(dt_frm_name_month) is 1:
-                    dt_frm_name_month = "0" + dt_frm_name_month
+                dt = datetime.datetime.strptime(dt_frm_name, "%Y%m%d")
 
-            # Pull day from full date
-            m_day = re.search(r"[- /.:_]([12][0-9]|3[01]|0?[1-9])$", dt_frm_name)
+                dt_frm_name_month = str(dt.month)
+                dt_frm_name_day = str(dt.day)
 
-            if m_day is not None:
-                dt_frm_name_day = m_day.group()
-                dt_frm_name_day = re.sub(r'\D', "", dt_frm_name_day)
-
-                if len(dt_frm_name_day) is 1:
-                    dt_frm_name_day = "0" + dt_frm_name_day
+            except Exception:
+                print("Unable to parse date for " + filename)
 
             full_dt_frm_name = dt_frm_name
+
+            # add leading zeros if needed
+            if len(dt_frm_name_month) is 1:
+                dt_frm_name_month = "0" + dt_frm_name_month
+
+            if len(dt_frm_name_day) is 1:
+                dt_frm_name_day = "0" + dt_frm_name_day
 
             # If I had to parse out the month and day then build it back
             if len(dt_frm_name_month) is 2 and len(dt_frm_name_day) is 2:

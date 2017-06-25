@@ -50,7 +50,6 @@ class FileUtils:
         # Copy files to target destination
         try:
             if FileUtils.does_file_exist(tgt_filename, tgt_dir):
-                # TODO figure out a way to identify same name before copy (Identify in mark duplicates)
                 return FileUtils.copy_file(src_f, tgt_dir, FileUtils.add_suffix(tgt_filename, "((d))"))
 
             copyfile(src_f, tgt_dir + tgt_filename)

@@ -7,7 +7,7 @@ from app import NavUtil, ImageUtils, ReportUtil
 
 STR_DIR1 = r"/Users/paulottley/Movies/iMovie Library.imovielibrary/4-2-17/Original Media"
 STR_DIR2 = r"/Volumes/OttFamilyShare/Backups/Pictures"
-STR_DIR3 = r"/Volumes/Elements2TB/Backups/Library"
+STR_DIR3 = r"/Volumes/Elements2TB/Backups/Pictures/images"
 STR_DIR4 = r"/Users/paulottley/Google Drive/MomsDadsPhotos"
 
 TGT_DIR1 = r"/Volumes/MyBook2TB/Backups/SortTarget"
