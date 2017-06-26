@@ -6,7 +6,6 @@ import datetime
 import platform
 import re
 
-from app import FileUtils
 from app import Mov
 from PIL import Image
 from PIL.ExifTags import TAGS
@@ -14,6 +13,7 @@ from hachoir.parser import createParser
 from hachoir.metadata import extractMetadata
 
 from app import Rules
+from app import FileUtils
 
 CURRENT_YEAR = datetime.datetime.now().year
 
