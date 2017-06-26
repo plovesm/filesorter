@@ -29,8 +29,11 @@ MONTHS = {"Jan": "01",
           "Dec": "12"}
 
 DATE_REGEX_WORD = r"(\w\w\w\s\d{1,2},\s(19|20)\d\d)"
-DATE_REGEX = r"((19|20)\d\d[- /.:_]?(1[012]|0?[1-9])[- /.:_]?([12][0-9]|3[01]|0?[1-9]))"
+DATE_REGEX_BASE = r"((19|20)\d\d[- /.:_]?(1[012]|0?[1-9])[- /.:_]?([12][0-9]|3[01]|0?[1-9]))"
+DATE_REGEX = r"(^" + DATE_REGEX_BASE + ")|(\D" + DATE_REGEX_BASE + "\D)"
 DATE_PREFIX_REGEX = DATE_REGEX + "[- /:_]?"
+
+OLDEST_YEAR = 1970
 
 DEBUG = False
 
@@ -91,3 +94,7 @@ class Rules:
     @staticmethod
     def get_months_list():
         return MONTHS
+
+    @staticmethod
+    def get_oldest_year():
+        return OLDEST_YEAR

@@ -6,6 +6,7 @@ import datetime
 import platform
 import re
 
+from app import FileUtils
 from app import Mov
 from PIL import Image
 from PIL.ExifTags import TAGS
@@ -22,41 +23,67 @@ class ImageUtils:
     @staticmethod
     def get_original_date(filename, deep=False):
 
-        # First, try Atom Parser
-        if deep is True and os.path.isfile(filename):
-            dt_from_atom = ImageUtils.get_dt_from_atom_parser(filename)
-            if dt_from_atom is not None and \
-                    "0000" not in dt_from_atom and \
-                    CURRENT_YEAR >= int(dt_from_atom[:4]) > 1970:
-                return dt_from_atom
+        date_frm_filename = None
+        date_frm_exif_data = None  # Images Only
+        date_frm_atom = None  # Video Only
+        date_frm_parser = None  # Images or Videos
 
-        # Check to see if it is even a file and then begin
+        path, fn = os.path.split(filename)
+        file_category = FileUtils.get_file_category(fn)
+
+        # First, see if there is a date in the filename (Easiest and universal)
+        dt_frm_file, str_dt_frm_file = ImageUtils.get_dt_from_name(fn)
+        if dt_frm_file is not None and str_dt_frm_file is not None:
+            date_frm_filename = dt_frm_file
+
+        # Next, pull a date from the metadata
         if os.path.isfile(filename):
-            try:
-                # First method uses exif and works mainly for images
-                exif = Image.open(filename)._getexif().items()
-                dt = ImageUtils.get_exif_field(filename, exif, 'DateTimeOriginal')
+            if file_category == Rules.get_img_dir():
+                try:
+                    # First method uses exif and works mainly for images
+                    exif = Image.open(filename)._getexif().items()
+                    dt = ImageUtils.get_exif_field(filename,
+                                                   exif,
+                                                   'DateTimeOriginal')
 
-                if dt is not "NotFound" and dt is not None:
-                    return dt
+                    if dt is not "NotFound" and dt is not None:
+                        date_frm_exif_data = re.sub(r"\D", "", dt.split(" ")[0])
 
-            except Exception as err:
-                if Rules.get_debug() is True:
-                    print("get_original_date(): Metadata extraction error: %s" % err)
+                except Exception as err:
+                    if Rules.get_debug() is True:
+                        print("get_original_date(): Metadata extraction error: %s" % err)
 
-            # If the date wasn't found or didn't exist, try a different approach
-            dt = ImageUtils.get_dt_from_parser(filename)
-            if dt is not None:
-                return dt
+            elif file_category == Rules.get_vid_dir():
+                # First, try Atom Parser
+                if deep is True and os.path.isfile(filename):
+                    dt_from_atom = ImageUtils.get_dt_from_atom_parser(filename)
+                    if dt_from_atom is not None and \
+                            "0000" not in dt_from_atom and \
+                            CURRENT_YEAR >= int(dt_from_atom[:4]) > 1970:
+                        date_frm_atom = re.sub(r"\D", "", dt_from_atom.split(" ")[0])
 
-            # Next, see if the date is found in the filename
-            path, fn = os.path.split(filename)
-            dt_from_file = ImageUtils.get_dt_from_name(fn)
-            if dt_from_file is not None and CURRENT_YEAR >= int(dt_from_file[:4]) > 1970:
-                return dt_from_file
-            else:
-                # Everything failed, so date doesn't exist
-                return "0000-00-00 00:00:00"
+            elif date_frm_exif_data is None and date_frm_atom is None:
+                    dt = ImageUtils.get_dt_from_parser(filename)
+                    if dt is not None:
+                        date_frm_parser = re.sub(r"\D", "", dt.split(" ")[0])
+
+        else:
+            print("Not a file: " + str(filename))
+            return None, None
+
+        # Finally, compare the two for the most likely one
+            # Earliest date
+            # After 1970
+            # Not past the current year
+
+        date_list = [date_frm_filename,
+                     date_frm_exif_data,
+                     date_frm_atom,
+                     date_frm_parser]
+
+        best_date_taken = ImageUtils.get_earliest_date(date_list)
+
+        return ImageUtils.get_date_obj(best_date_taken)  # Date object and string (YYYY-MM-DD)
 
     @staticmethod
     def get_exif_field(fn, exif, field):
@@ -129,19 +156,23 @@ class ImageUtils:
     @staticmethod
     def get_dt_from_name(filename=""):
         if isinstance(filename, str):
-            dt_frm_name = ""
-            dt_frm_name_month = ""
-            dt_frm_name_day = ""
-
+            # We start with a container to hold ALL the dates found in the name
             date_list = []
 
+            # Make a copy of the name to check against
             filename_chk = filename
 
+            # Check numeric date matches (ie. 2017-06-13)
             while re.search(Rules.get_date_regex(), filename_chk):
                 m = re.search(Rules.get_date_regex(), filename_chk)
-                date_list.append(m.group())
+                found_date = re.sub(r"\D", "", m.group())
+
+                if CURRENT_YEAR >= int(found_date[:4]) > Rules.get_oldest_year():
+                    date_list.append(found_date)
+
                 filename_chk = filename_chk.replace(m.group(), "")
 
+            # Check for dates with letters (ie. Apr 14, 2017)
             while re.search(Rules.get_date_regex_word(), filename_chk):
                 m = re.search(Rules.get_date_regex_word(), filename_chk)
                 date_word = m.group()
@@ -149,7 +180,6 @@ class ImageUtils:
 
                 month = Rules.get_months_list()[date_word[:3]]
                 year = date_word[(len(date_word)-4):]
-                day = "01"
 
                 if len(date_word) == 12:
                     day = date_word[4] + date_word[4]
@@ -158,49 +188,40 @@ class ImageUtils:
 
                 date_list.append(year + month + day)
 
-            # Pull full date from name
-            if date_list is not None and len(date_list) > 0:
-                dt_frm_name = re.sub(r"\D", "", date_list[0])
-                # Find the oldest date
+            # Iterate through the list and find the earliest date within boundaries
+            dt_frm_name = ImageUtils.get_earliest_date(date_list)
 
-                if len(date_list) > 1:
-                    for date in date_list:
-                        date_chk = re.sub(r"\D", "", date)
-                        if int(date_chk) < int(dt_frm_name):
+            if dt_frm_name is None:
+                # Short circuit and return None
+                return None, None
+
+            # Return String formatted (YYYY-MM-DD) and Date obj
+            return ImageUtils.get_date_obj(dt_frm_name)
+
+        # It wasn't even a string to begin with
+        return None, None
+
+    @staticmethod
+    def get_earliest_date(date_list):
+        dt_frm_name = None
+        if date_list is not None and len(date_list) > 0:
+            dt_frm_name = date_list[0]
+            # Find the oldest date that is over 1970
+            if len(date_list) > 1:
+                for date in date_list:
+                    date_chk = date
+                    if date_chk is not None and (
+                                    dt_frm_name is None or (
+                                            int(date_chk) < int(dt_frm_name) and
+                                            int(dt_frm_name[:4]) - int(date_chk[:4]) < 10)):
+                        # Make sure it is a valid date
+                        try:
+                            dt = datetime.datetime.strptime(date_chk, "%Y%m%d")
                             dt_frm_name = date_chk
+                        except Exception as err:
+                            print("Not valid date: " + str(err))
 
-            try:
-
-                dt = datetime.datetime.strptime(dt_frm_name, "%Y%m%d")
-
-                dt_frm_name_month = str(dt.month)
-                dt_frm_name_day = str(dt.day)
-
-            except Exception:
-                print("Unable to parse date for " + filename)
-
-            full_dt_frm_name = dt_frm_name
-
-            # add leading zeros if needed
-            if len(dt_frm_name_month) is 1:
-                dt_frm_name_month = "0" + dt_frm_name_month
-
-            if len(dt_frm_name_day) is 1:
-                dt_frm_name_day = "0" + dt_frm_name_day
-
-            # If I had to parse out the month and day then build it back
-            if len(dt_frm_name_month) is 2 and len(dt_frm_name_day) is 2:
-                full_dt_frm_name = dt_frm_name[:4] + dt_frm_name_month + dt_frm_name_day
-
-            stripped_dt = re.sub(r'\D', "", full_dt_frm_name)
-            if len(stripped_dt) is 8:
-                formatted_dt = stripped_dt[:4] + "-" + stripped_dt[4:]
-                formatted_dt = formatted_dt[:7] + "-" + formatted_dt[7:]
-                return formatted_dt + " 00:00:00"
-
-            # It's all or nothing
-            return None
-        return None
+        return dt_frm_name
 
     @staticmethod
     def get_dt_created_from_file(file):
@@ -221,6 +242,8 @@ class ImageUtils:
             dt = datetime.date.fromtimestamp(creation_date)
 
         return dt
+
+
 
     @staticmethod
     def get_dt_captured_split(str_dt="0000:00:00 00:00:00"):
@@ -304,3 +327,33 @@ class ImageUtils:
             except Exception as err:
                 print("Image dates didn't work: " + err)
             """
+
+    @classmethod
+    def get_date_obj(cls, stripped_date):
+
+        # Now convert date string to date object
+        try:
+
+            dt = datetime.datetime.strptime(stripped_date, "%Y%m%d")
+
+            dt_frm_name_year = str(dt.year)
+            dt_frm_name_month = str(dt.month)
+            dt_frm_name_day = str(dt.day)
+
+        except Exception:
+            # If anything went wrong, remove from list then try again
+            print("Unable to parse date")
+            return None, None
+
+        # add leading zeros if needed
+        if len(dt_frm_name_month) is 1:
+            dt_frm_name_month = "0" + dt_frm_name_month
+
+        if len(dt_frm_name_day) is 1:
+            dt_frm_name_day = "0" + dt_frm_name_day
+
+        formatted_dt = "{0}-{1}-{2}".format(dt_frm_name_year,
+                                            dt_frm_name_month,
+                                            dt_frm_name_day)
+
+        return formatted_dt, dt

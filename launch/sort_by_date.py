@@ -3,35 +3,43 @@
 # File used to start the FilesSorter launch
 import os
 
-from app import NavUtil, ImageUtils, ReportUtil
+from app import FileUtils
+from app import ImageUtils
+from app import Rules
 
-STR_DIR1 = r"/Users/paulottley/Movies/iMovie Library.imovielibrary/4-2-17/Original Media"
-STR_DIR2 = r"/Volumes/OttFamilyShare/Backups/Pictures"
-STR_DIR3 = r"/Volumes/Elements2TB/Backups/Pictures/images"
-STR_DIR4 = r"/Users/paulottley/Google Drive/MomsDadsPhotos"
+# STR_DIR = r"/Users/paulottley/Desktop/SortSource"
+STR_DIR = r"/Volumes/Elements2TB/Backups/Pictures/images"
 
-TGT_DIR1 = r"/Volumes/MyBook2TB/Backups/SortTarget"
+TGT_DIR = r"/Volumes/MyBook2TB/Backups/SortTarget"
 
-all_files1 = NavUtil.walk_dir(STR_DIR3, STR_DIR3)
+for root, dirs, files in os.walk(STR_DIR):
+    for file in files:
 
-file_lists = [all_files1, []]
+        target_dir = root
 
-for file in all_files1:
-    # noinspection PyBroadException
+        tgt_folder = FileUtils.get_file_category(file)
 
-    try:
-        dt = ImageUtils.get_dt_captured_split(file.get_date_taken())
-        file.set_tgt_dir("{0}{1}{2}{3}{4}{5}".format(file.get_tgt_dir(),
-                                                     file.get_tgt_folder(),
-                                                     dt.year,
-                                                     os.sep,
-                                                     dt.month,
-                                                     os.sep))
-        # print(file.get_full_tgt_path())
-    except Exception as err:
-        print("Date failed on: {0}".format(file.get_filename()))
-        file.set_tgt_dir(file.get_tgt_dir() + os.sep + "date_err")
+        try:
+            dt, str_dt = ImageUtils.get_dt_from_name(file)
+            if dt is None:
+                print("Zero or None: " + file)
+                target_dir = "{0}{1}{2}{3}".format(
+                                                    root,
+                                                    os.sep,
+                                                    "no_date",
+                                                    os.sep)
+            else:
+                target_dir = "{0}{1}{2}{3}{4}{5}".format(
+                                                    root + os.sep,
+                                                    tgt_folder + os.sep,
+                                                    dt.year,
+                                                    os.sep,
+                                                    dt.month,
+                                                    os.sep)
 
-NavUtil.move_files(all_files1)
+            FileUtils.move_file(root + os.sep + file, target_dir, file)
 
-ReportUtil.final_report(file_lists)
+        except Exception as err:
+            print("Date failed on: {0} with error: {1}".format(file, err))
+
+

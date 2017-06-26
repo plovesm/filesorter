@@ -15,12 +15,13 @@ zero_count = 0
 STR_DIR1 = r"/Users/paulottley/Desktop/SortSource"
 # STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Pictures/images"
 
-files_batch = r"/Users/paulottley/PycharmProjects/filesorter/test/Filename_Changes.txt"
+FILES_BATCH = r"/Users/paulottley/PycharmProjects/filesorter/test/Filename_Changes.txt"
+LOG_FILE = r"/Users/paulottley/PycharmProjects/filesorter/test/Filename_Changes_log.txt"
 
 problem_files = []
 
 # Open file log with write privileges
-files_log = open(files_batch, "w")
+files_log = open(FILES_BATCH, "w")
 
 start_time = datetime.datetime.now()
 print("Correct Date started at {0}:".format(start_time))

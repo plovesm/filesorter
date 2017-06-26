@@ -6,6 +6,8 @@ import os
 from shutil import copyfile
 from shutil import move
 
+from app import Rules
+
 
 class FileUtils:
 
@@ -27,6 +29,21 @@ class FileUtils:
             file_type = "error"
 
         return file_type
+
+    @staticmethod
+    def get_file_category(filename):
+        # Initialize type as other
+        tgt_folder = Rules.get_oth_dir()
+
+        f_ext = FileUtils.get_file_type(filename)
+
+        # Check extension and switch to image or video
+        if f_ext in Rules.get_img_types():
+            tgt_folder = Rules.get_img_dir()
+        elif f_ext in Rules.get_vid_dir():
+            tgt_folder = Rules.get_vid_dir()
+
+        return tgt_folder
 
     @staticmethod
     def move_file(src_f, tgt_dir, tgt_filename):
