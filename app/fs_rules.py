@@ -33,7 +33,7 @@ DATE_REGEX_BASE = r"((19|20)\d\d[- /.:_]?(1[012]|0?[1-9])[- /.:_]?([12][0-9]|3[0
 DATE_REGEX = r"(^" + DATE_REGEX_BASE + ")|(\D" + DATE_REGEX_BASE + "\D)"
 DATE_PREFIX_REGEX = DATE_REGEX + "[- /:_]?"
 
-OLDEST_YEAR = 1970
+OLDEST_YEAR = 2002
 
 DEBUG = False
 

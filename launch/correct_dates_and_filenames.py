@@ -12,8 +12,8 @@ from app import Rules
 count = 0
 zero_count = 0
 
-STR_DIR1 = r"/Users/paulottley/Desktop/SortSource"
-# STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Pictures/images"
+# STR_DIR1 = r"/Users/paulottley/Desktop/SortSource"
+STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Pictures/images"
 
 FILES_BATCH = r"/Users/paulottley/PycharmProjects/filesorter/test/Filename_Changes.txt"
 LOG_FILE = r"/Users/paulottley/PycharmProjects/filesorter/test/Filename_Changes_log.txt"
@@ -22,9 +22,10 @@ problem_files = []
 
 # Open file log with write privileges
 files_log = open(FILES_BATCH, "w")
+log_file = open(LOG_FILE, "w")
 
 start_time = datetime.datetime.now()
-print("Correct Date started at {0}:".format(start_time))
+log_file.write("Correct Date started at {0} \n".format(start_time))
 
 for root, dirs, files in os.walk(STR_DIR1):
     for file in files:
@@ -36,9 +37,13 @@ for root, dirs, files in os.walk(STR_DIR1):
             FileUtils.move_file(full_filename, r"/Volumes/MyBook2TB/Backups/Trash/", file)
 
         else:
-            date_taken = ImageUtils.get_dt_from_name(file)
-            orig_datetime = ImageUtils.get_original_date(full_filename)
-            orig_date = orig_datetime.split(" ")[0]
+            date_taken = ImageUtils.get_dt_from_name(file)[0]
+            orig_datetime = ImageUtils.get_original_date(full_filename)[0]
+
+            if orig_datetime is not None:
+                orig_date = orig_datetime.split(" ")[0]
+            else:
+                orig_date = "0000-00-00"
             new_file = file
 
             # TODO Figure out if there is a need to reconcile date_taken and orig_date
@@ -46,7 +51,7 @@ for root, dirs, files in os.walk(STR_DIR1):
             if "0000" in orig_date:
                 if file[0] is not ".":
                     zero_count += 1
-                    print("0000000 Filename: {0} date: {1}".format(file, orig_date))
+                    log_file.write("0000000 Filename: {0} date: {1} \n".format(file, orig_date))
 
             # First, set the date so it is consistent
             # ImageUtils.set_date(full_filename, orig_datetime)
@@ -114,15 +119,17 @@ for root, dirs, files in os.walk(STR_DIR1):
 
         count += 1
 
-print("Total count: {0} Zero Count: {1}".format(count, zero_count))
+for f in problem_files:
+    log_file.write(f + "\n")
+
+log_file.write("Total count: {0} Zero Count: {1} \n".format(count, zero_count))
 
 end_time = datetime.datetime.now()
-print("Correct Date ended at {0}:".format(end_time))
+log_file.write("Correct Date ended at {0} \n".format(end_time))
 
-print("Start time: {0} End time: {1}".format(start_time, end_time))
+log_file.write("Start time: {0} End time: {1} \n".format(start_time, end_time))
 
-for f in problem_files:
-    print(f)
 
 # clean up
 files_log.close()
+log_file.close()

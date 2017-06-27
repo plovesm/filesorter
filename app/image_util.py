@@ -59,7 +59,7 @@ class ImageUtils:
                     dt_from_atom = ImageUtils.get_dt_from_atom_parser(filename)
                     if dt_from_atom is not None and \
                             "0000" not in dt_from_atom and \
-                            CURRENT_YEAR >= int(dt_from_atom[:4]) > 1970:
+                            CURRENT_YEAR >= int(dt_from_atom[:4]) > Rules.get_oldest_year():
                         date_frm_atom = re.sub(r"\D", "", dt_from_atom.split(" ")[0])
 
             elif date_frm_exif_data is None and date_frm_atom is None:
@@ -205,10 +205,13 @@ class ImageUtils:
     def get_earliest_date(date_list):
         dt_frm_name = None
         if date_list is not None and len(date_list) > 0:
-            dt_frm_name = date_list[0]
+            if date_list[0] is not None:
+                dt_frm_name = re.sub(r"\D", "", date_list[0])
             # Find the oldest date that is over 1970
             if len(date_list) > 1:
                 for date in date_list:
+                    if date is not None:
+                        date = re.sub(r"\D", "", date.split(" ")[0])
                     date_chk = date
                     if date_chk is not None and (
                                     dt_frm_name is None or (

@@ -5,7 +5,9 @@ import os
 import re
 from shutil import move
 
-STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Pictures/images"
+# STR_DIR1 = r"/Volumes/MyBook2TB/Backups/Pictures/images"
+STR_DIR1 = r"/Users/paulottley/Desktop/SortSource"
+
 STR_DIR2 = r"/Volumes/MyBook2TB/Backups/SortTarget"
 STR_DIR3 = r"/Volumes/MyBook2TB/Backups/Library"
 
